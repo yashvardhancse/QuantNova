@@ -17,6 +17,14 @@
   --red-soft: rgba(239, 68, 68, 0.14);
   --blue: #38bdf8;
   --shadow: 0 18px 55px rgba(0, 0, 0, 0.44);
+
+  /* Card tokens */
+  --card-padding: 13px;
+  --card-gap: 8px;
+  --card-radius: 8px;
+  --card-hover-lift: translateY(-2px);
+  --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --card-transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease, transform 200ms ease;
   color: var(--text);
   background: var(--bg);
   font-family:
@@ -201,10 +209,17 @@ h2 {
 
 .system-card {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--card-radius);
   background: rgba(255, 255, 255, 0.035);
-  padding: 12px;
+  padding: var(--card-padding);
   margin-bottom: 10px;
+  transition: var(--card-transition);
+}
+
+.system-card:hover {
+  border-color: rgba(165, 162, 255, 0.18);
+  box-shadow: var(--card-hover-shadow);
+  transform: var(--card-hover-lift);
 }
 
 .system-card span,
@@ -745,9 +760,17 @@ svg {
 .strategy-card,
 .signal-box {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--card-radius);
   background: linear-gradient(135deg, rgba(165, 162, 255, 0.08), transparent 38%), var(--panel-2);
-  padding: 13px;
+  padding: var(--card-padding);
+  transition: var(--card-transition);
+}
+
+.strategy-card:hover,
+.signal-box:hover {
+  border-color: rgba(165, 162, 255, 0.22);
+  box-shadow: var(--card-hover-shadow);
+  transform: var(--card-hover-lift);
 }
 
 .execution-grid {
@@ -941,7 +964,14 @@ svg {
 .metric-tile {
   min-height: 82px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent), var(--panel-2);
-  padding: 13px;
+  padding: var(--card-padding);
+  transition: var(--card-transition);
+}
+
+.metric-tile:hover {
+  border-color: rgba(165, 162, 255, 0.15);
+  box-shadow: var(--card-hover-shadow);
+  transform: var(--card-hover-lift);
 }
 
 .metric-tile strong {
