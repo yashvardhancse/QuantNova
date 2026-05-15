@@ -9,6 +9,7 @@ import {
 } from './api/client';
 import { CandleChart, ChartType } from './components/CandleChart';
 import { DataLoader } from './components/DataLoader';
+import { Footer } from './components/Footer';
 import sampleCandles from './data/sample-ohlcv.json';
 import { runMovingAverageCrossoverBacktest } from './backtest/movingAverageCrossover';
 import {
@@ -507,6 +508,8 @@ function App() {
         ) : null}
         {section === 'Backtests' ? renderBacktests() : null}
         {section === 'History' ? renderHistory() : null}
+
+        <Footer onNavigate={setSection} />
       </section>
     </main>
   );
