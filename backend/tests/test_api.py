@@ -76,7 +76,7 @@ def test_csv_upload_endpoint_accepts_ohlcv_file() -> None:
 
     assert response.status_code == 200
     data = response.json()
-    assert data[0]["timestamp"] == "2024-01-01"
+    assert data[0]["timestamp"] == "2024-01-01T00:00:00"
     assert data[0]["close"] == 11
 
 
@@ -99,7 +99,7 @@ def test_csv_upload_accepts_common_export_aliases_and_formatted_numbers() -> Non
 
     assert response.status_code == 200
     data = response.json()
-    assert data[0]["timestamp"] == "2024-01-01"
+    assert data[0]["timestamp"] == "2024-01-01T00:00:00"
     assert data[0]["open"] == 1000.5
     assert data[0]["close"] == 1010
     assert data[0]["volume"] == 12345
@@ -119,7 +119,7 @@ def test_csv_upload_accepts_semicolon_separated_files() -> None:
 
     assert response.status_code == 200
     data = response.json()
-    assert data[0]["timestamp"] == "2024-01-01 12:00:00"
+    assert data[0]["timestamp"] == "2024-01-01T12:00:00"
     assert data[0]["close"] == 11
 
 
