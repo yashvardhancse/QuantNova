@@ -46,18 +46,23 @@ export function DataLoader({ onUpload, onResetSample, status, error }: DataLoade
         included sample.
       </p>
       <div className="button-row">
-        <button type="button" onClick={() => inputRef.current?.click()} disabled={isUploading}>
-          {isUploading ? 'Uploading...' : 'Upload File'}
-        </button>
-        <button
-          type="button"
-          className="secondary"
-          onClick={handleResetSample}
-          disabled={isUploading}
-        >
-          Reset sample
-        </button>
-      </div>
+  <button 
+    type="button" 
+    className="btn-base btn-primary" // This makes the main action standout
+    onClick={() => inputRef.current?.click()}
+  >
+    {isUploading ? 'Uploading...' : 'Upload File'}
+  </button>
+  
+  <button
+    type="button"
+    className="btn-base btn-outline" // This makes the "Reset" a clear secondary action
+    onClick={handleResetSample}
+    disabled={isUploading}
+  >
+    Reset sample
+  </button>
+</div>
       <input
         ref={inputRef}
         className="visually-hidden"
