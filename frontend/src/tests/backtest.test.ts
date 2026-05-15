@@ -31,6 +31,15 @@ describe('moving average crossover backtest', () => {
     expect(result.finalEquity).toBe(1000);
   });
 
+  it('calculates sharpe ratio for fallback backtest', () => {
+    const result = runMovingAverageCrossoverBacktest(candles, {
+      shortPeriod: 2,
+      longPeriod: 4,
+      initialCash: 1000,
+    });
+    expect(result.sharpeRatio).toBeTypeOf('number');
+  });
+
   it('requires the short period to be less than the long period', () => {
     expect(() =>
       runMovingAverageCrossoverBacktest(candles, {

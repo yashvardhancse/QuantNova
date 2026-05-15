@@ -25,6 +25,7 @@ export interface BacktestResult {
   winRate: number;
   maxDrawdown: number;
   finalEquity: number;
+  sharpeRatio: number;
   trades: Trade[];
   equityCurve: EquityPoint[];
 }

@@ -1,27 +1,1071 @@
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-47S41Q5415"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-47S41Q5415');
-
-  
-</script>
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="QuantNova is an open-source GUI foundation for learning quantitative backtesting with OHLCV data."
+
+    <title>QuantNova - Open Source Quantitative Backtesting Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
     />
-    <title>QuantNova</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #0b1020;
+        color: #f5f7fa;
+        overflow-x: hidden;
+        line-height: 1.7;
+      }
+
+      .background {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        background:
+          radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 25%),
+          radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.18), transparent 25%),
+          #0b1020;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: auto;
+        padding: 40px 0;
+      }
+
+      .hero {
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+      }
+
+      .badge {
+        padding: 10px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(8px);
+        font-size: 0.95rem;
+        margin-bottom: 28px;
+        color: #cbd5e1;
+      }
+
+      .hero h1 {
+        font-size: 5rem;
+        font-weight: 800;
+        letter-spacing: -2px;
+        background: linear-gradient(90deg, #60a5fa, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+      }
+
+      .hero p {
+        max-width: 850px;
+        font-size: 1.2rem;
+        color: #d1d5db;
+        margin-bottom: 40px;
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn {
+        padding: 14px 28px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s ease;
+      }
+
+      .primary {
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        color: white;
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+      }
+
+      .primary:hover {
+        transform: translateY(-3px);
+      }
+
+      .secondary {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #f8fafc;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      section {
+        margin-top: 100px;
+      }
+
+      .section-title {
+        font-size: 2.6rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+
+      .section-description {
+        max-width: 900px;
+        color: #cbd5e1;
+        font-size: 1.08rem;
+        margin-bottom: 50px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 28px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 30px;
+        backdrop-filter: blur(12px);
+        transition: 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(96, 165, 250, 0.4);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+      }
+
+      .card h3 {
+        font-size: 1.35rem;
+        margin-bottom: 14px;
+      }
+
+      .card p {
+        color: #cbd5e1;
+        font-size: 0.98rem;
+      }
+
+      .feature-icon {
+        font-size: 2rem;
+        margin-bottom: 16px;
+      }
+
+      .comparison {
+        overflow-x: auto;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 18px 24px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      th {
+        background: rgba(255, 255, 255, 0.03);
+        color: #93c5fd;
+        font-weight: 600;
+      }
+
+      td {
+        color: #d1d5db;
+      }
+
+      .highlight {
+        color: #60a5fa;
+        font-weight: 600;
+      }
+
+      .roadmap {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-top: 30px;
+      }
+
+      .roadmap-item {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 24px;
+        border-radius: 20px;
+      }
+
+      .phase {
+        min-width: 80px;
+        font-weight: 700;
+        color: #60a5fa;
+        font-size: 1rem;
+      }
+
+      footer {
+        margin-top: 120px;
+        text-align: center;
+        padding-bottom: 40px;
+        color: #94a3b8;
+      }
+
+      .footer-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 14px;
+        color: #f8fafc;
+      }
+
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 3rem;
+        }
+
+        .hero p {
+          font-size: 1rem;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+      }
+
+      .mock-terminal {
+        margin-top: 60px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      .terminal-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #64748b;
+      }
+
+      .chart-layout {
+        display: grid;
+        grid-template-columns: 70px 1fr;
+        min-height: 520px;
+      }
+
+      .tools-panel {
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.02);
+        padding: 18px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .tool-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.03);
+        font-size: 1.1rem;
+        color: #e2e8f0;
+      }
+
+      .chart-area {
+        padding: 20px;
+      }
+
+      .chart-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-bottom: 30px;
+      }
+
+      .toolbar-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .toolbar-chip {
+        padding: 10px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        color: #f8fafc;
+        font-size: 0.9rem;
+      }
+
+      .chart-grid {
+        position: relative;
+        height: 360px;
+        border-radius: 20px;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 60px 60px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .candles {
+        position: absolute;
+        bottom: 40px;
+        left: 30px;
+        right: 30px;
+        height: 260px;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+      }
+
+      .candle {
+        width: 16px;
+        position: relative;
+        border-radius: 4px;
+      }
+
+      .green {
+        background: #10b981;
+      }
+
+      .red {
+        background: #f43f5e;
+      }
+
+      .wick {
+        position: absolute;
+        width: 2px;
+        background: #cbd5e1;
+        left: 50%;
+        transform: translateX(-50%);
+        top: -30px;
+        bottom: -30px;
+      }
+
+      .buy-signal,
+      .sell-signal {
+        position: absolute;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .buy-signal {
+        background: rgba(16, 185, 129, 0.18);
+        border: 1px solid rgba(16, 185, 129, 0.45);
+        color: #6ee7b7;
+      }
+
+      .sell-signal {
+        background: rgba(244, 63, 94, 0.18);
+        border: 1px solid rgba(244, 63, 94, 0.45);
+        color: #fda4af;
+      }
+
+      .indicator-panel {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 14px;
+      }
+
+      .indicator-item {
+        padding: 14px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        text-align: center;
+        color: #e2e8f0;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div class="background"></div>
+
+    <div class="container">
+      <section class="hero">
+        <div class="badge">🚀 Open Source • Quantitative Research • GSSoC Project</div>
+
+        <h1>QuantNova</h1>
+
+        <p>
+          An open-source, GUI-based quantitative backtesting platform designed to make strategy
+          development, experimentation, and contribution accessible to everyone — from beginners
+          exploring quantitative finance to advanced developers building scalable trading systems.
+        </p>
+
+        <div class="cta-buttons">
+          <a href="#vision" class="btn primary">Explore Vision</a>
+          <a
+            href="https://github.com/yashvardhancse/QuantNova"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn secondary"
+            >GitHub</a
+          >
+          <a href="#roadmap" class="btn secondary">Project Roadmap</a>
+        </div>
+
+        <div class="mock-terminal">
+          <div class="terminal-top">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+
+          <div class="chart-layout">
+            <div class="tools-panel">
+              <div class="tool-btn">✏️</div>
+              <div class="tool-btn">📏</div>
+              <div class="tool-btn">📈</div>
+              <div class="tool-btn">↗️</div>
+              <div class="tool-btn">⭐</div>
+              <div class="tool-btn">🧲</div>
+              <div class="tool-btn">📐</div>
+            </div>
+
+            <div class="chart-area">
+              <div class="chart-toolbar">
+                <div class="toolbar-group">
+                  <div class="toolbar-chip">BTCUSDT</div>
+                  <div class="toolbar-chip">1m</div>
+                  <div class="toolbar-chip">5m</div>
+                  <div class="toolbar-chip">15m</div>
+                  <div class="toolbar-chip">1h</div>
+                  <div class="toolbar-chip">1D</div>
+                </div>
+
+                <div class="toolbar-group">
+                  <div class="toolbar-chip">Indicators</div>
+                  <div class="toolbar-chip">AI Backtest</div>
+                  <div class="toolbar-chip">Run Backtest</div>
+                </div>
+              </div>
+
+              <div class="chart-grid">
+                <div class="buy-signal" style="left: 18%; top: 72%">BUY</div>
+                <div class="sell-signal" style="left: 67%; top: 28%">SELL</div>
+
+                <svg width="100%" height="100%" style="position: absolute; inset: 0">
+                  <polyline
+                    points="40,250 160,200 260,170 340,210 460,140 620,160 760,100 900,130"
+                    fill="none"
+                    stroke="#60a5fa"
+                    stroke-width="3"
+                    stroke-dasharray="6 6"
+                  />
+                </svg>
+
+                <div class="candles">
+                  <div class="candle green" style="height: 80px"><div class="wick"></div></div>
+                  <div class="candle green" style="height: 120px"><div class="wick"></div></div>
+                  <div class="candle red" style="height: 90px"><div class="wick"></div></div>
+                  <div class="candle green" style="height: 150px"><div class="wick"></div></div>
+                  <div class="candle green" style="height: 170px"><div class="wick"></div></div>
+                  <div class="candle red" style="height: 110px"><div class="wick"></div></div>
+                  <div class="candle green" style="height: 190px"><div class="wick"></div></div>
+                  <div class="candle red" style="height: 140px"><div class="wick"></div></div>
+                  <div class="candle green" style="height: 210px"><div class="wick"></div></div>
+                  <div class="candle green" style="height: 230px"><div class="wick"></div></div>
+                  <div class="candle red" style="height: 160px"><div class="wick"></div></div>
+                  <div class="candle green" style="height: 200px"><div class="wick"></div></div>
+                </div>
+              </div>
+
+              <div class="indicator-panel">
+                <div class="indicator-item">RSI</div>
+                <div class="indicator-item">MACD</div>
+                <div class="indicator-item">VWAP</div>
+                <div class="indicator-item">EMA</div>
+                <div class="indicator-item">Bollinger Bands</div>
+                <div class="indicator-item">Supertrend</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="vision">
+        <h2 class="section-title">Platform Vision</h2>
+
+        <p class="section-description">
+          QuantNova is inspired by modern quantitative research workflows and advanced charting
+          platforms such as croid.app, while remaining fully open-source and contributor-friendly.
+          The platform is designed to combine intuitive charting, visual strategy building,
+          indicator-based backtesting, and extensible quantitative infrastructure into a single
+          ecosystem.
+        </p>
+
+        <div class="grid">
+          <div class="card">
+            <div class="feature-icon">📂</div>
+            <h3>OHLCV Upload Support</h3>
+            <p>
+              Users can upload custom OHLCV datasets in CSV format for stocks, crypto, forex, or
+              custom assets. This allows complete flexibility without relying on proprietary
+              datasets.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">🌐</div>
+            <h3>Free Market Data APIs</h3>
+            <p>
+              Integrate free APIs such as Binance, Alpha Vantage, Yahoo Finance, or Polygon to fetch
+              live and historical market data directly inside the platform.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">📈</div>
+            <h3>Interactive Trading Charts</h3>
+            <p>
+              Advanced candlestick charts with zooming, panning, multi-timeframe support, overlays,
+              and strategy signal visualization.
+            </p>
+          </div>
+        </div>
+
+        <div style="height: 40px"></div>
+        <h2 class="section-title">Why QuantNova?</h2>
+
+        <p class="section-description">
+          Many existing backtesting tools are either highly complex, code-heavy, or locked behind
+          closed ecosystems. While these platforms are powerful, they often create a steep learning
+          curve for beginners and make customization difficult for contributors.
+        </p>
+
+        <div class="grid">
+          <div class="card">
+            <div class="feature-icon">📉</div>
+            <h3>Complex Existing Systems</h3>
+            <p>
+              Most professional quantitative research platforms require advanced setup, deep domain
+              knowledge, and extensive coding experience, making them inaccessible for new
+              contributors.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">🔒</div>
+            <h3>Closed Ecosystems</h3>
+            <p>
+              Platforms like TradingView provide excellent user experience but operate in restricted
+              ecosystems with limited extensibility and customization.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">🧩</div>
+            <h3>Library-Only Solutions</h3>
+            <p>
+              Existing open-source frameworks often focus solely on code libraries without
+              beginner-friendly GUI workflows or structured onboarding for contributors.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Core Platform Features</h2>
+
+        <p class="section-description">
+          QuantNova is not just a simple backtesting script. The long-term objective is to build a
+          complete quantitative research workflow with modern UX, modular infrastructure, and
+          collaborative open-source architecture.
+        </p>
+
+        <div class="grid">
+          <div class="card">
+            <div class="feature-icon">🧠</div>
+            <h3>Strategy Builder</h3>
+            <p>
+              Create trading strategies visually through configurable entry, exit, stop-loss, and
+              take-profit conditions. Contributors can also implement fully custom Python
+              strategies.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">📊</div>
+            <h3>Indicators Library</h3>
+            <p>
+              Support for RSI, MACD, Bollinger Bands, VWAP, EMA, SMA, ATR, Supertrend, candlestick
+              patterns, and community-contributed indicators.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">✏️</div>
+            <h3>Drawing Tools</h3>
+            <p>
+              Trend lines, support/resistance zones, Fibonacci retracements, annotations, and custom
+              drawing utilities directly on the chart interface.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">⚙️</div>
+            <h3>Backtesting Engine</h3>
+            <p>
+              Run backtests on historical data with configurable fees, slippage, leverage,
+              long/short positions, and portfolio settings.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">📉</div>
+            <h3>Performance Analytics</h3>
+            <p>
+              Equity curve, drawdown analysis, Sharpe ratio, win rate, trade history, risk exposure,
+              and detailed statistical reporting.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">🤖</div>
+            <h3>AI Strategy Workflows</h3>
+            <p>
+              Future roadmap includes prompt-based strategy generation, machine learning
+              integrations, NLP-based sentiment systems, and intelligent signal pipelines.
+            </p>
+          </div>
+        </div>
+
+        <div style="height: 60px"></div>
+
+        <h2 class="section-title">The Goal</h2>
+
+        <p class="section-description">
+          QuantNova aims to bridge the gap between simplicity and extensibility. The platform
+          combines a modern graphical interface with a modular backend architecture, enabling users
+          to upload OHLCV datasets, test strategies, visualize results, and contribute new features
+          without needing to understand the entire system.
+        </p>
+
+        <div class="grid">
+          <div class="card">
+            <div class="feature-icon">📊</div>
+            <h3>GUI-Based Backtesting</h3>
+            <p>
+              Upload OHLCV datasets and visualize strategy performance through an intuitive
+              interface.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">⚡</div>
+            <h3>Modular Architecture</h3>
+            <p>
+              Strategies, indicators, and analytics modules are designed to be plug-and-play for
+              contributors.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">🤝</div>
+            <h3>Contributor Friendly</h3>
+            <p>
+              Structured onboarding, beginner issues, and clean architecture make open-source
+              contribution easier.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Workflow Overview</h2>
+
+        <p class="section-description">
+          QuantNova is designed around a complete quantitative workflow — from importing market data
+          to visual analysis, strategy development, and large-scale experimentation.
+        </p>
+
+        <div class="grid">
+          <div class="card">
+            <div class="feature-icon">1️⃣</div>
+            <h3>Import Market Data</h3>
+            <p>
+              Upload custom OHLCV datasets or connect to free APIs for live and historical market
+              feeds.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">2️⃣</div>
+            <h3>Visualize & Analyze</h3>
+            <p>
+              Explore charts using indicators, overlays, pattern detection, and custom drawing
+              tools.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">3️⃣</div>
+            <h3>Build Strategies</h3>
+            <p>
+              Configure rule-based strategies visually or implement advanced Python-based logic
+              modules.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">4️⃣</div>
+            <h3>Run Backtests</h3>
+            <p>
+              Execute simulations with configurable parameters and inspect trade-level behavior
+              directly on the chart.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">5️⃣</div>
+            <h3>Optimize Performance</h3>
+            <p>
+              Compare strategies, tune parameters, analyze statistics, and improve execution logic.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">6️⃣</div>
+            <h3>Extend the Platform</h3>
+            <p>
+              Contributors can add indicators, APIs, chart modules, ML models, options strategies,
+              and advanced analytics systems.
+            </p>
+          </div>
+        </div>
+
+        <div style="height: 60px"></div>
+
+        <h2 class="section-title">QuantNova vs Existing Tools</h2>
+
+        <div class="comparison">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>TradingView</th>
+                <th>Backtrader</th>
+                <th class="highlight">QuantNova</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Graphical Interface</td>
+                <td>✅</td>
+                <td>❌</td>
+                <td class="highlight">✅</td>
+              </tr>
+
+              <tr>
+                <td>Open Source</td>
+                <td>❌</td>
+                <td>✅</td>
+                <td class="highlight">✅</td>
+              </tr>
+
+              <tr>
+                <td>Beginner Friendly</td>
+                <td>✅</td>
+                <td>⚠️</td>
+                <td class="highlight">✅</td>
+              </tr>
+
+              <tr>
+                <td>Custom Python Strategies</td>
+                <td>❌</td>
+                <td>✅</td>
+                <td class="highlight">✅</td>
+              </tr>
+
+              <tr>
+                <td>Contributor-Oriented Design</td>
+                <td>❌</td>
+                <td>❌</td>
+                <td class="highlight">✅</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="roadmap">
+        <h2 class="section-title">Project Roadmap</h2>
+
+        <div class="roadmap">
+          <div class="roadmap-item">
+            <div class="phase">Phase 1</div>
+            <div>
+              <h3>Core Backtesting Engine</h3>
+              <p>
+                CSV upload support, SMA/RSI strategies, buy/sell signal generation, and equity curve
+                visualization.
+              </p>
+            </div>
+          </div>
+
+          <div class="roadmap-item">
+            <div class="phase">Phase 2</div>
+            <div>
+              <h3>Advanced Strategy Support</h3>
+              <p>
+                Strategy comparison, portfolio analytics, optimization metrics, and customizable
+                indicators.
+              </p>
+            </div>
+          </div>
+
+          <div class="roadmap-item">
+            <div class="phase">Phase 3</div>
+            <div>
+              <h3>Quantitative Research Expansion</h3>
+              <p>
+                Machine learning pipelines, NLP-based strategies, live market data integration, and
+                options strategy simulation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Open Source First</h2>
+
+        <p class="section-description">
+          QuantNova is not intended to replace enterprise quantitative systems. Its purpose is to
+          create a collaborative and accessible environment where contributors can learn,
+          experiment, and build real-world quantitative infrastructure together.
+        </p>
+      </section>
+      <!--
+    <section id="gssoc-plan">
+  <h2 class="section-title">GSSoC Development Timeline</h2>
+
+  <p class="section-description">
+    QuantLab is structured as a contributor-friendly open-source project with a phased execution plan
+    aligned with the GSSoC contribution timeline. The objective is to progressively evolve the platform
+    from a lightweight MVP into a collaborative quantitative research ecosystem.
+  </p>
+
+  <div class="roadmap">
+
+    <div class="roadmap-item">
+      <div class="phase">Week 1</div>
+      <div>
+        <h3>Project Foundation & MVP Setup</h3>
+        <p>
+          Initialize FastAPI backend, React/Next.js frontend, repository structure,
+          GitHub Actions CI/CD, issue templates, CONTRIBUTING.md, and contributor onboarding docs.
+        </p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="phase">Week 2</div>
+      <div>
+        <h3>OHLCV Upload & Market Data APIs</h3>
+        <p>
+          Implement CSV upload support, Binance/Yahoo Finance integration,
+          historical candle parsing, and market data validation pipelines.
+        </p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="phase">Week 3</div>
+      <div>
+        <h3>Interactive Charting Engine</h3>
+        <p>
+          Develop candlestick chart UI, zooming/panning support,
+          timeframe selectors, overlays, and drawing tool integration.
+        </p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="phase">Week 4</div>
+      <div>
+        <h3>Backtesting Core Engine</h3>
+        <p>
+          Build modular backtesting engine supporting SMA, EMA, RSI, MACD,
+          long/short execution logic, trade simulation, fees, and slippage.
+        </p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="phase">Week 5</div>
+      <div>
+        <h3>Visual Strategy Builder</h3>
+        <p>
+          Create no-code strategy builder for configuring entry/exit conditions,
+          stop loss, take profit, indicator crossovers, and signal pipelines.
+        </p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="phase">Week 6</div>
+      <div>
+        <h3>Analytics & Performance Metrics</h3>
+        <p>
+          Add equity curve visualization, Sharpe ratio, win rate,
+          max drawdown, trade history, and portfolio analytics dashboard.
+        </p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="phase">Week 7</div>
+      <div>
+        <h3>Contributor Expansion Phase</h3>
+        <p>
+          Add beginner-friendly issues, indicator contribution templates,
+          modular plugin support, and open-source workflow improvements.
+        </p>
+      </div>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="phase">Week 8</div>
+      <div>
+        <h3>AI & Quant Research Roadmap</h3>
+        <p>
+          Prototype prompt-based strategy workflows, ML-based signal generation,
+          NLP sentiment systems, and future quantitative research modules.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+    <footer>
+      <div class="footer-title">QuantNova</div>
+      <p>
+        Building the future of open-source quantitative research — one contribution at a time.
+      </p>
+    </footer>
+
+  </div>
+</body>
+</html>
+-->
+
+      <section id="tech-stack">
+        <h2 class="section-title">Tech Stack</h2>
+
+        <div class="grid">
+          <div class="card">
+            <div class="feature-icon">⚛️</div>
+            <h3>Frontend</h3>
+            <p>
+              Next.js, React, TypeScript, Tailwind CSS, TradingView Lightweight Charts, Zustand,
+              Framer Motion.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">⚡</div>
+            <h3>Backend</h3>
+            <p>
+              FastAPI, Python, WebSockets, Pydantic, AsyncIO, REST APIs, strategy execution engine.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">📊</div>
+            <h3>Quant & Analytics</h3>
+            <p>
+              Pandas, NumPy, TA-Lib, vectorized backtesting, portfolio analytics, performance
+              metrics.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">🤖</div>
+            <h3>AI & ML Roadmap</h3>
+            <p>
+              Scikit-learn, PyTorch, Hugging Face Transformers, NLP sentiment analysis, prompt-based
+              workflows.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">🛢️</div>
+            <h3>Database & Storage</h3>
+            <p>PostgreSQL, Redis, TimescaleDB (future roadmap), local CSV ingestion pipeline.</p>
+          </div>
+
+          <div class="card">
+            <div class="feature-icon">☁️</div>
+            <h3>DevOps & Infrastructure</h3>
+            <p>
+              Docker, GitHub Actions, Vercel, Railway/Render, modular open-source deployment
+              workflows.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-47S41Q5415"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-47S41Q5415');
+      </script>
+    </div>
+    >>>>>>> abc66a1 (style: format frontend files with prettier)
   </body>
 </html>
