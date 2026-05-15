@@ -1075,3 +1075,19 @@ td {
     grid-template-columns: 1fr;
   }
 }
+.card-hover {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
