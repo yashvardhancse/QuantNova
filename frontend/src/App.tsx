@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   calculateIndicators,
   fetchBinanceKlines,
+  fetchBinanceSymbols, // CHANGED: import to load popular pairs for DataLoader selector
   getHealth,
   getSampleData,
   runMaCrossoverBacktest,
@@ -18,7 +19,7 @@ import {
   calculateRsi,
   calculateSma,
 } from './indicators';
-import { ApiBacktestResponse, BacktestResult, Candle, NullableNumber, Trade } from './utils/types';
+import { ApiBacktestResponse, BacktestResult, Candle, NullableNumber, Trade, TradingPair } from './utils/types'; // CHANGED: added TradingPair for popularPairs state
 
 type Section = 'Terminal' | 'Strategies' | 'Portfolio' | 'Backtests' | 'History' | 'Monitor';
 type ApiStatus = 'checking' | 'connected' | 'fallback';
@@ -83,6 +84,7 @@ function App() {
   } | null>(null);
   const [apiBacktest, setApiBacktest] = useState<ApiBacktestResponse | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>(() => readHistory());
+  const [popularPairs, setPopularPairs] = useState<TradingPair[]>([]); // CHANGED: stores popular pairs for the DataLoader selector
 
   const filteredCandles = useMemo(
     () => filterCandlesByDateRange(candles, backtestStartDate, backtestEndDate),
@@ -129,6 +131,7 @@ function App() {
   useEffect(() => {
     checkHealth();
     loadLiveBinanceData();
+    fetchBinanceSymbols().then(setPopularPairs).catch(() => undefined); // CHANGED: load popular pairs; silent fail keeps fallback empty list
     // Run the boot load once with the default Binance range.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -580,6 +583,9 @@ function App() {
                   : `${candles.length} candles loaded from ${dataSource}.`
               }
               error={error}
+              pairs={popularPairs} // CHANGED: pass popular pairs for the datalist selector
+              selectedPair={binanceSymbol} // CHANGED: controlled symbol value
+              onPairChange={setBinanceSymbol} // CHANGED: update binanceSymbol from DataLoader
             />
           </aside>
         </section>
@@ -727,14 +733,6 @@ function App() {
           </label>
         </div>
         <div className="execution-grid">
-          <label>
-            <span>Binance symbol</span>
-            <input
-              type="text"
-              value={binanceSymbol}
-              onChange={(event) => setBinanceSymbol(event.target.value)}
-            />
-          </label>
           <label>
             <span>Binance interval</span>
             <select
