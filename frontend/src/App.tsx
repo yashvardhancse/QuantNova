@@ -19,6 +19,7 @@ import {
   calculateSma,
 } from './indicators';
 import { ApiBacktestResponse, BacktestResult, Candle, NullableNumber, Trade } from './utils/types';
+import { Footer } from './components/Footer';
 
 type Section = 'Terminal' | 'Strategies' | 'Portfolio' | 'Backtests' | 'History' | 'Monitor';
 type ApiStatus = 'checking' | 'connected' | 'fallback';
@@ -342,173 +343,179 @@ function App() {
   }
 
   return (
-    <main className="terminal-shell">
-      <aside className="terminal-sidebar" aria-label="Primary navigation">
-        <div className="brand-lockup">
-          <div className="brand-mark">QL</div>
-          <div>
-            <h1>QuantNova</h1>
-            <span>Open-source terminal</span>
-          </div>
-        </div>
-
-        <nav className="side-nav">
-          {navItems.map((item) => (
-            <button
-              className={section === item ? 'nav-item active' : 'nav-item'}
-              key={item}
-              onClick={() => setSection(item)}
-            >
-              <span className="nav-dot" />
-              {item}
-            </button>
-          ))}
-        </nav>
-
-        <div className="sidebar-footer">
-          <div className="system-card">
-            <span>Backend</span>
-            <strong>{apiStatus === 'connected' ? 'API connected' : 'Local fallback'}</strong>
-            <small>{statusMessage}</small>
-          </div>
-          <button
-            className="nav-item"
-            type="button"
-            title="Settings are planned for a later milestone."
-            disabled
-          >
-            Settings
-          </button>
-          <button
-            className="nav-item"
-            type="button"
-            title="Support channel setup is coming soon."
-            disabled
-          >
-            Support
-          </button>
-        </div>
-      </aside>
-
-      <section className="terminal-main">
-        <header className="topbar">
-          <div className="tab-group" aria-label="Workspace sections">
-            <button
-              className={section === 'Terminal' ? 'top-tab active' : 'top-tab'}
-              onClick={() => setSection('Terminal')}
-            >
-              Workspace
-            </button>
-            <button
-              className={section === 'Backtests' ? 'top-tab active' : 'top-tab'}
-              onClick={() => setSection('Backtests')}
-            >
-              Backtest
-            </button>
-            <button
-              className="top-tab"
-              disabled
-              title="Coming soon: optimization is not implemented in the foundation MVP."
-            >
-              Optimize
-            </button>
-            <button
-              className="top-tab"
-              disabled
-              title="Coming soon: live trading is not implemented in the foundation MVP."
-            >
-              Live
-            </button>
-          </div>
-
-          <div className="market-controls">
-            <div className="market-ticker">
-              <span>Last</span>
-              <strong>{formatMoney(latestCandle?.close ?? 0)}</strong>
+    <div className="app-wrapper">
+      <main className="terminal-shell">
+        <aside className="terminal-sidebar" aria-label="Primary navigation">
+          <div className="brand-lockup">
+            <div className="brand-mark">QL</div>
+            <div>
+              <h1>QuantNova</h1>
+              <span>Open-source terminal</span>
             </div>
-            <select
-              aria-label="Asset selector"
-              value="BTCUSDT"
-              disabled
-              title="BTCUSDT is the only bundled sample asset in this foundation MVP."
-              onChange={() => undefined}
-            >
-              <option>BTCUSDT</option>
-            </select>
-            <div className="timeframe-group" aria-label="Timeframe selector">
-              {['1m', '5m', '15m', '1h'].map((item) => (
-                <button
-                  className={timeframe === item ? 'timeframe active' : 'timeframe'}
-                  key={item}
-                  disabled={timeframe !== item}
-                  onClick={() => setStatusMessage('15m sample timeframe is already selected.')}
-                  title={
-                    timeframe === item
-                      ? 'Current sample timeframe. Click confirms the active sample timeframe.'
-                      : 'Coming soon: timeframe resampling is not implemented yet.'
-                  }
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-            <button className="ghost-button" onClick={() => setIndicatorMenuOpen((open) => !open)}>
-              Indicators
-            </button>
-            <button
-              className="purple-button"
-              disabled
-              title="Coming soon: deployment is not implemented in the foundation MVP."
-            >
-              Deploy
-            </button>
-            <button className="ghost-button" onClick={() => setSection('Monitor')}>
-              Monitor
-            </button>
           </div>
-        </header>
 
-        {indicatorMenuOpen ? (
-          <section className="terminal-panel indicator-menu">
-            {Object.entries({
-              smaShort: `SMA ${shortWindow}`,
-              smaLong: `SMA ${longWindow}`,
-              ema: 'EMA 10',
-              rsi: 'RSI 14',
-              bollinger: 'Bollinger Bands',
-            }).map(([key, label]) => (
-              <label key={key} className="toggle-row">
-                <input
-                  type="checkbox"
-                  checked={visibleIndicators[key as keyof typeof visibleIndicators]}
-                  onChange={() =>
-                    setVisibleIndicators((current) => ({
-                      ...current,
-                      [key]: !current[key as keyof typeof current],
-                    }))
-                  }
-                />
-                {label}
-              </label>
+          <nav className="side-nav">
+            {navItems.map((item) => (
+              <button
+                className={section === item ? 'nav-item active' : 'nav-item'}
+                key={item}
+                onClick={() => setSection(item)}
+              >
+                <span className="nav-dot" />
+                {item}
+              </button>
             ))}
-          </section>
-        ) : null}
+          </nav>
 
-        {section === 'Terminal' ? renderTerminal() : null}
-        {section === 'Strategies' ? renderStrategies() : null}
-        {section === 'Portfolio' ? (
-          <InfoPage
-            title="Portfolio"
-            message="Portfolio tracking is planned. No live trading is implemented yet."
-          />
-        ) : null}
-        {section === 'Monitor' ? (
-          <InfoPage title="Monitor" message={`Read-only status: ${statusMessage}`} />
-        ) : null}
-        {section === 'Backtests' ? renderBacktests() : null}
-        {section === 'History' ? renderHistory() : null}
-      </section>
-    </main>
+          <div className="sidebar-footer">
+            <div className="system-card">
+              <span>Backend</span>
+              <strong>{apiStatus === 'connected' ? 'API connected' : 'Local fallback'}</strong>
+              <small>{statusMessage}</small>
+            </div>
+            <button
+              className="nav-item"
+              type="button"
+              title="Settings are planned for a later milestone."
+              disabled
+            >
+              Settings
+            </button>
+            <button
+              className="nav-item"
+              type="button"
+              title="Support channel setup is coming soon."
+              disabled
+            >
+              Support
+            </button>
+          </div>
+        </aside>
+
+        <section className="terminal-main">
+          <header className="topbar">
+            <div className="tab-group" aria-label="Workspace sections">
+              <button
+                className={section === 'Terminal' ? 'top-tab active' : 'top-tab'}
+                onClick={() => setSection('Terminal')}
+              >
+                Workspace
+              </button>
+              <button
+                className={section === 'Backtests' ? 'top-tab active' : 'top-tab'}
+                onClick={() => setSection('Backtests')}
+              >
+                Backtest
+              </button>
+              <button
+                className="top-tab"
+                disabled
+                title="Coming soon: optimization is not implemented in the foundation MVP."
+              >
+                Optimize
+              </button>
+              <button
+                className="top-tab"
+                disabled
+                title="Coming soon: live trading is not implemented in the foundation MVP."
+              >
+                Live
+              </button>
+            </div>
+
+            <div className="market-controls">
+              <div className="market-ticker">
+                <span>Last</span>
+                <strong>{formatMoney(latestCandle?.close ?? 0)}</strong>
+              </div>
+              <select
+                aria-label="Asset selector"
+                value="BTCUSDT"
+                disabled
+                title="BTCUSDT is the only bundled sample asset in this foundation MVP."
+                onChange={() => undefined}
+              >
+                <option>BTCUSDT</option>
+              </select>
+              <div className="timeframe-group" aria-label="Timeframe selector">
+                {['1m', '5m', '15m', '1h'].map((item) => (
+                  <button
+                    className={timeframe === item ? 'timeframe active' : 'timeframe'}
+                    key={item}
+                    disabled={timeframe !== item}
+                    onClick={() => setStatusMessage('15m sample timeframe is already selected.')}
+                    title={
+                      timeframe === item
+                        ? 'Current sample timeframe. Click confirms the active sample timeframe.'
+                        : 'Coming soon: timeframe resampling is not implemented yet.'
+                    }
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+              <button
+                className="ghost-button"
+                onClick={() => setIndicatorMenuOpen((open) => !open)}
+              >
+                Indicators
+              </button>
+              <button
+                className="purple-button"
+                disabled
+                title="Coming soon: deployment is not implemented in the foundation MVP."
+              >
+                Deploy
+              </button>
+              <button className="ghost-button" onClick={() => setSection('Monitor')}>
+                Monitor
+              </button>
+            </div>
+          </header>
+
+          {indicatorMenuOpen ? (
+            <section className="terminal-panel indicator-menu">
+              {Object.entries({
+                smaShort: `SMA ${shortWindow}`,
+                smaLong: `SMA ${longWindow}`,
+                ema: 'EMA 10',
+                rsi: 'RSI 14',
+                bollinger: 'Bollinger Bands',
+              }).map(([key, label]) => (
+                <label key={key} className="toggle-row">
+                  <input
+                    type="checkbox"
+                    checked={visibleIndicators[key as keyof typeof visibleIndicators]}
+                    onChange={() =>
+                      setVisibleIndicators((current) => ({
+                        ...current,
+                        [key]: !current[key as keyof typeof current],
+                      }))
+                    }
+                  />
+                  {label}
+                </label>
+              ))}
+            </section>
+          ) : null}
+
+          {section === 'Terminal' ? renderTerminal() : null}
+          {section === 'Strategies' ? renderStrategies() : null}
+          {section === 'Portfolio' ? (
+            <InfoPage
+              title="Portfolio"
+              message="Portfolio tracking is planned. No live trading is implemented yet."
+            />
+          ) : null}
+          {section === 'Monitor' ? (
+            <InfoPage title="Monitor" message={`Read-only status: ${statusMessage}`} />
+          ) : null}
+          {section === 'Backtests' ? renderBacktests() : null}
+          {section === 'History' ? renderHistory() : null}
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 
   function renderTerminal() {
