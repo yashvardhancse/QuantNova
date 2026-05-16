@@ -55,6 +55,7 @@ function App() {
   const [backtestEndDate, setBacktestEndDate] = useState('');
   const [binanceSymbol, setBinanceSymbol] = useState('BTCUSDT');
   const [binanceInterval, setBinanceInterval] = useState('15m');
+  const [activeSymbol, setActiveSymbol] = useState('BTCUSDT');
   const [binanceStartDate, setBinanceStartDate] = useState(defaultLiveRange.startDate);
   const [binanceEndDate, setBinanceEndDate] = useState(defaultLiveRange.endDate);
   const [chartAction, setChartAction] = useState<'zoom-in' | 'zoom-out' | 'fit' | null>(null);
@@ -167,6 +168,7 @@ function App() {
       setApiIndicators(null);
       setApiStatus('connected');
       setStatusMessage('Sample data loaded from API.');
+      setActiveSymbol('BTCUSDT');
     } catch {
       setCandles(defaultCandles);
       setDataSource('Bundled fallback sample data');
@@ -195,6 +197,7 @@ function App() {
       setApiIndicators(null);
       setApiStatus('connected');
       setStatusMessage(`Loaded ${nextCandles.length} live Binance candles.`);
+      setActiveSymbol(binanceSymbol.trim().toUpperCase());
     } catch {
       await loadSampleData();
       setStatusMessage('Live Binance fetch failed. Loaded bundled fallback sample data.');
@@ -216,6 +219,7 @@ function App() {
       setApiIndicators(null);
       setStatusMessage(`Loaded ${uploaded.length} candles from ${file.name}.`);
       setApiStatus('connected');
+      setActiveSymbol('CUSTOM');
     } catch (uploadError) {
       const message = parseError(
         uploadError,
@@ -264,7 +268,7 @@ function App() {
       setApiBacktest(result);
       setApiStatus('connected');
       setStatusMessage('Backtest completed successfully.');
-      const entry = toHistoryEntry(result, timeframe);
+      const entry = toHistoryEntry(result, timeframe, activeSymbol);
       const next = [entry, ...history].slice(0, 25);
       setHistory(next);
       localStorage.setItem(historyKey, JSON.stringify(next));
@@ -431,12 +435,12 @@ function App() {
             </div>
             <select
               aria-label="Asset selector"
-              value="BTCUSDT"
+              value={activeSymbol}
               disabled
-              title="BTCUSDT is the only bundled sample asset in this foundation MVP."
+              title={`${activeSymbol} is the currently active asset.`}
               onChange={() => undefined}
             >
-              <option>BTCUSDT</option>
+              <option>{activeSymbol}</option>
             </select>
             <div className="timeframe-group" aria-label="Timeframe selector">
               {['1m', '5m', '15m', '1h'].map((item) => (
@@ -521,7 +525,7 @@ function App() {
           <section className="chart-panel terminal-panel">
             <PanelHeading
               eyebrow="Terminal"
-              title="BTCUSDT strategy workspace"
+              title={`${activeSymbol} strategy workspace`}
               status={apiStatus === 'connected' ? 'API connected' : 'Local fallback'}
             />
             <div className="chart-statline">
@@ -561,6 +565,7 @@ function App() {
             </div>
             <CandleChart
               candles={filteredCandles}
+              symbol={activeSymbol}
               shortSma={smaShort}
               longSma={smaLong}
               signals={apiBacktest?.signals ?? []}
@@ -1022,11 +1027,11 @@ function fromApiBacktest(response: ApiBacktestResponse): BacktestResult {
   };
 }
 
-function toHistoryEntry(response: ApiBacktestResponse, timeframe: string): HistoryEntry {
+function toHistoryEntry(response: ApiBacktestResponse, timeframe: string, asset: string): HistoryEntry {
   return {
     id: `${Date.now()}`,
     strategy: 'SMA crossover',
-    asset: 'BTCUSDT',
+    asset,
     timeframe,
     netProfit: response.summary.net_profit,
     winRate: response.summary.win_rate,
