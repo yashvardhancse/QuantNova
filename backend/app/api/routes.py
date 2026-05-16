@@ -3,9 +3,19 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
-from app.models import BacktestRequest, BacktestResponse, Candle, IndicatorRequest
+# CHANGED: added TradingPairInfo and get_popular_pairs to support GET /market/binance/symbols
+from app.models import (
+    BacktestRequest,
+    BacktestResponse,
+    Candle,
+    IndicatorRequest,
+    TradingPairInfo,
+)
 from app.services.backtester import run_ma_crossover_backtest
-from app.services.binance import fetch_klines
+from app.services.binance import (
+    fetch_klines,
+    get_popular_pairs,
+)
 from app.services.data_loader import load_sample_candles, parse_upload_file
 from app.services.indicators import bollinger_bands, ema, rsi, sma
 
@@ -39,6 +49,12 @@ async def upload_data(file: Annotated[UploadFile, File()]) -> list[Candle]:
         return await parse_upload_file(file)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+# CHANGED: new endpoint returning the curated popular-pairs list for the frontend selector
+@router.get("/market/binance/symbols", response_model=list[TradingPairInfo])
+def get_binance_symbols() -> list[TradingPairInfo]:
+    return [TradingPairInfo(**p) for p in get_popular_pairs()]
 
 
 @router.get("/market/binance/klines")
