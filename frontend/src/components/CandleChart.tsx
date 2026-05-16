@@ -26,6 +26,7 @@ export type ChartType = 'candlestick' | 'bar';
 
 interface CandleChartProps {
   candles: Candle[];
+  symbol?: string;
   shortSma: Array<number | null>;
   longSma: Array<number | null>;
   signals: BacktestSignal[];
@@ -48,6 +49,7 @@ interface HoverCandle {
 
 export function CandleChart({
   candles,
+  symbol,
   shortSma,
   longSma,
   signals,
@@ -262,7 +264,7 @@ export function CandleChart({
       <div className="chart-toolbar" aria-label="Chart controls">
         <div className="chart-symbol">
           <span className="search-dot" />
-          BTCUSDT
+          {symbol || 'BTCUSDT'}
         </div>
         <div className="chart-timeframes" aria-label="Timeframes">
           {['1m', '5m', '15m', '30m', '1h', '2h', '4h', '12h', '1d', '1w'].map((item) => (

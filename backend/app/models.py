@@ -122,3 +122,12 @@ class BacktestResponse(BaseModel):
     trades: list[Trade]
     signals: list[Signal]
     equity_curve: list[EquityPoint]
+
+
+# CHANGED: new model for the /market/binance/symbols endpoint — enables multi-pair selection
+class TradingPairInfo(BaseModel):
+    symbol: str
+    base_asset: str
+    quote_asset: str
+
+

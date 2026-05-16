@@ -10,6 +10,14 @@ export interface Candle {
 
 export type NullableNumber = number | null;
 
+// CHANGED: type for the GET /market/binance/symbols response — used by the pair selector
+export interface TradingPair {
+  symbol: string;
+  base_asset: string;
+  quote_asset: string;
+}
+
+
 export interface Trade {
   entryDate: string;
   exitDate: string;
