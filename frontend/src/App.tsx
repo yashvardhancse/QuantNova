@@ -8,6 +8,7 @@ import {
   uploadData,
 } from './api/client';
 import { CandleChart, ChartType } from './components/CandleChart';
+import ChartLoader from './components/ChartLoader';
 import { DataLoader } from './components/DataLoader';
 import sampleCandles from './data/sample-ohlcv.json';
 import { runMovingAverageCrossoverBacktest } from './backtest/movingAverageCrossover';
@@ -511,83 +512,114 @@ function App() {
     </main>
   );
 
-  function renderTerminal() {
-    return (
-      <>
-        <section className="workspace-grid">
-          <section className="chart-panel terminal-panel">
-            <PanelHeading
-              eyebrow="Terminal"
-              title="BTCUSDT strategy workspace"
-              status={apiStatus === 'connected' ? 'API connected' : 'Local fallback'}
-            />
-            <div className="chart-statline">
-              <span>O {formatCompact(latestCandle?.open ?? 0)}</span>
-              <span>H {formatCompact(latestCandle?.high ?? 0)}</span>
-              <span>L {formatCompact(latestCandle?.low ?? 0)}</span>
-              <span>C {formatCompact(latestCandle?.close ?? 0)}</span>
-              <span>Vol {formatCompact(latestCandle?.volume ?? 0)}</span>
-            </div>
-            <div className="indicator-strip" aria-label="Current indicator values">
-              {visibleIndicators.smaShort ? (
-                <IndicatorPill
-                  label={`SMA ${shortWindow}`}
-                  value={smaShort[latestIndex]}
-                  tone="green"
-                />
-              ) : null}
-              {visibleIndicators.smaLong ? (
-                <IndicatorPill
-                  label={`SMA ${longWindow}`}
-                  value={smaLong[latestIndex]}
-                  tone="purple"
-                />
-              ) : null}
-              {visibleIndicators.ema ? (
-                <IndicatorPill label="EMA 10" value={ema[latestIndex]} tone="blue" />
-              ) : null}
-              {visibleIndicators.rsi ? (
-                <IndicatorPill label="RSI 14" value={rsi[latestIndex]} tone="neutral" />
-              ) : null}
-              {visibleIndicators.bollinger ? (
-                <IndicatorPill label="BB Upper" value={latestBand?.upper ?? null} tone="neutral" />
-              ) : null}
-              {visibleIndicators.bollinger ? (
-                <IndicatorPill label="BB Lower" value={latestBand?.lower ?? null} tone="neutral" />
-              ) : null}
-            </div>
-            <CandleChart
-              candles={filteredCandles}
-              shortSma={smaShort}
-              longSma={smaLong}
-              signals={apiBacktest?.signals ?? []}
-              chartType={chartType}
-              showSignals={showSignals}
-              showSma={showSma && (visibleIndicators.smaShort || visibleIndicators.smaLong)}
-              showVolume={showVolume}
-              chartAction={chartAction}
-              onChartActionHandled={() => setChartAction(null)}
-            />
-          </section>
-          <aside className="right-rail">
-            {renderControls()}
-            <DataLoader
-              onUpload={handleUpload}
-              onResetSample={loadSampleData}
-              status={
-                isLoadingSample
-                  ? 'Loading sample data...'
-                  : `${candles.length} candles loaded from ${dataSource}.`
-              }
-              error={error}
-            />
-          </aside>
-        </section>
-        {renderMetricsAndTrades()}
-      </>
-    );
-  }
+function renderTerminal() {
+  return (
+    <>
+      <section className="workspace-grid">
+        <section className="chart-panel terminal-panel">
+          <PanelHeading
+            eyebrow="Terminal"
+            title="BTCUSDT strategy workspace"
+            status={apiStatus === 'connected' ? 'API connected' : 'Local fallback'}
+          />
 
+          <div className="chart-statline">
+            <span>O {formatCompact(latestCandle?.open ?? 0)}</span>
+            <span>H {formatCompact(latestCandle?.high ?? 0)}</span>
+            <span>L {formatCompact(latestCandle?.low ?? 0)}</span>
+            <span>C {formatCompact(latestCandle?.close ?? 0)}</span>
+            <span>Vol {formatCompact(latestCandle?.volume ?? 0)}</span>
+          </div>
+
+          <div className="indicator-strip" aria-label="Current indicator values">
+            {visibleIndicators.smaShort ? (
+              <IndicatorPill
+                label={`SMA ${shortWindow}`}
+                value={smaShort[latestIndex]}
+                tone="green"
+              />
+            ) : null}
+
+            {visibleIndicators.smaLong ? (
+              <IndicatorPill
+                label={`SMA ${longWindow}`}
+                value={smaLong[latestIndex]}
+                tone="purple"
+              />
+            ) : null}
+
+            {visibleIndicators.ema ? (
+              <IndicatorPill label="EMA 10" value={ema[latestIndex]} tone="blue" />
+            ) : null}
+
+            {visibleIndicators.rsi ? (
+              <IndicatorPill label="RSI 14" value={rsi[latestIndex]} tone="neutral" />
+            ) : null}
+
+            {visibleIndicators.bollinger ? (
+              <IndicatorPill
+                label="BB Upper"
+                value={latestBand?.upper ?? null}
+                tone="neutral"
+              />
+            ) : null}
+
+            {visibleIndicators.bollinger ? (
+              <IndicatorPill
+                label="BB Lower"
+                value={latestBand?.lower ?? null}
+                tone="neutral"
+              />
+            ) : null}
+          </div>
+
+          <div
+            className={`chart-transition ${
+              isLoadingSample ? 'fade-in' : 'fade-visible'
+            }`}
+          >
+            {isLoadingSample ? (
+              <ChartLoader />
+            ) : (
+              <CandleChart
+                candles={filteredCandles}
+                shortSma={smaShort}
+                longSma={smaLong}
+                signals={apiBacktest?.signals ?? []}
+                chartType={chartType}
+                showSignals={showSignals}
+                showSma={
+                  showSma &&
+                  (visibleIndicators.smaShort || visibleIndicators.smaLong)
+                }
+                showVolume={showVolume}
+                chartAction={chartAction}
+                onChartActionHandled={() => setChartAction(null)}
+              />
+            )}
+          </div>
+        </section>
+
+        <aside className="right-rail">
+          {renderControls()}
+
+          <DataLoader
+            onUpload={handleUpload}
+            onResetSample={loadSampleData}
+            status={
+              isLoadingSample
+                ? 'Loading sample data...'
+                : `${candles.length} candles loaded from ${dataSource}.`
+            }
+            error={error}
+          />
+        </aside>
+      </section>
+
+      {renderMetricsAndTrades()}
+    </>
+  );
+}
   function renderControls() {
     return (
       <section className="terminal-panel controls-panel">

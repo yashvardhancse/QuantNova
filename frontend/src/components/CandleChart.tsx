@@ -253,10 +253,6 @@ export function CandleChart({
     onChartActionHandled?.();
   }, [chartAction, onChartActionHandled]);
 
-  if (candles.length === 0) {
-    return <div className="empty-chart">Load OHLCV data to render a chart.</div>;
-  }
-
   return (
     <div className="chart-wrap">
       <div className="chart-toolbar" aria-label="Chart controls">
