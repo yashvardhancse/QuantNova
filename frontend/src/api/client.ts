@@ -1,4 +1,4 @@
-import { ApiBacktestResponse, ApiBinanceCandle, ApiCandle, Candle } from '../utils/types';
+import { ApiBacktestResponse, ApiBinanceCandle, ApiCandle, Candle, TradingPair } from '../utils/types'; // CHANGED: added TradingPair for fetchBinanceSymbols
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
 
@@ -48,6 +48,11 @@ export async function fetchBinanceKlines(payload: {
     headers: {},
   });
   return candles.map(fromBinanceCandle);
+}
+
+// CHANGED: fetches the curated popular-pairs list from GET /market/binance/symbols
+export async function fetchBinanceSymbols(): Promise<TradingPair[]> {
+  return request<TradingPair[]>('/market/binance/symbols');
 }
 
 export async function calculateIndicators(
