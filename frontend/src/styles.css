@@ -201,10 +201,11 @@ h2 {
 
 .system-card {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.035);
-  padding: 12px;
+  padding: 20px;
   margin-bottom: 10px;
+  transition: all 0.3s ease; 
 }
 
 .system-card span,
@@ -745,9 +746,10 @@ svg {
 .strategy-card,
 .signal-box {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 16px;
   background: linear-gradient(135deg, rgba(165, 162, 255, 0.08), transparent 38%), var(--panel-2);
-  padding: 13px;
+  padding: 20px;
+  transition: all 0.3s ease;
 }
 
 .execution-grid {
@@ -1082,8 +1084,8 @@ td {
 }
 
 .card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.2);
 }
 
 .responsive-grid {
