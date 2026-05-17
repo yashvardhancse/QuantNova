@@ -1,3 +1,4 @@
+import { LandingPage } from './components/LandingPage';
 import { useEffect, useMemo, useState } from 'react';
 import {
   calculateIndicators,
@@ -42,6 +43,7 @@ const historyKey = 'QuantNova.backtestHistory';
 const defaultLiveRange = getRecentDateRange(7);
 
 function App() {
+  const [showLandingPage, setShowLandingPage] = useState(true);
   const [section, setSection] = useState<Section>(() => readSectionFromHash());
   const [candles, setCandles] = useState<Candle[]>(defaultCandles);
   const [dataSource, setDataSource] = useState('Bundled fallback sample data');
@@ -340,6 +342,14 @@ function App() {
       ),
     );
   }
+
+  if (showLandingPage) {
+  return (
+    <LandingPage
+      onEnterApp={() => setShowLandingPage(false)}
+    />
+  );
+}
 
   return (
     <main className="terminal-shell">
