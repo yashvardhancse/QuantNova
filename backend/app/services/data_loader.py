@@ -1,4 +1,6 @@
+from datetime import datetime
 import re
+import json
 from io import BytesIO
 from pathlib import Path
 
@@ -8,133 +10,10 @@ from pydantic import ValidationError
 
 from backend.app.models.models import Candle
 
-REQUIRED_COLUMNS = ("open", "high", "low", "close", "volume")
-TIME_ALIASES = {
-    "timestamp",
-    "date",
-    "datetime",
-    "date_time",
-    "date_time_utc",
-    "time",
-    "open_time",
-    "open_time_utc",
-    "start_time",
-    "candle_time",
-}
-COLUMN_ALIASES = {
-    "open": {"open", "o", "open_price", "price_open"},
-    "high": {"high", "h", "high_price", "price_high"},
-    "low": {"low", "l", "low_price", "price_low"},
-    "close": {"close", "c", "last", "last_price", "close_price", "price_close", "adj_close"},
-    "volume": {"volume", "vol", "v", "base_volume", "volume_btc", "volume_usd", "volume_usdt"},
-}
-SAMPLE_DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "sample_btc_usd.csv"
-
-
-def load_sample_candles() -> list[Candle]:
-    return parse_ohlcv_csv(SAMPLE_DATA_PATH.read_text(encoding="utf-8"))
-
-
-async def parse_upload_file(file: UploadFile) -> list[Candle]:
-    filename = (file.filename or "").lower()
-    content = await file.read()
-    if not content:
-        raise ValueError("Uploaded file is empty.")
-
-    if filename.endswith(".csv"):
-        dataframe = pd.read_csv(BytesIO(content), sep=None, engine="python")
-    elif filename.endswith(".xlsx"):
-        dataframe = pd.read_excel(BytesIO(content))
-    else:
-        raise ValueError("Only .csv and .xlsx files are supported.")
-
-    return parse_ohlcv_dataframe(dataframe)
-
-
-def parse_ohlcv_csv(csv_text: str) -> list[Candle]:
-    lines = [line.strip() for line in csv_text.strip().splitlines() if line.strip()]
-    if len(lines) < 2:
-        raise ValueError("CSV must include a header row and at least one candle row.")
-
-    headers = [normalize_column(header) for header in lines[0].split(",")]
-    time_column = next((column for column in TIME_ALIASES if column in headers), None)
-    missing = sorted(set(REQUIRED_COLUMNS) - set(headers))
-
-    if time_column is None:
-        missing.insert(0, "timestamp or date")
-    if missing:
-        raise ValueError(f"CSV is missing required columns: {', '.join(missing)}.")
-
-    candles: list[Candle] = []
-    for row_number, line in enumerate(lines[1:], start=2):
-        cells = [cell.strip() for cell in line.split(",")]
-        if len(cells) != len(headers):
-            raise ValueError(
-                f"Row {row_number} has {len(cells)} values but expected {len(headers)}."
-            )
-
-        row = dict(zip(headers, cells, strict=True))
-        try:
-            candles.append(
-                Candle(
-                    timestamp=row[time_column],
-                    open=float(row["open"]),
-                    high=float(row["high"]),
-                    low=float(row["low"]),
-                    close=float(row["close"]),
-                    volume=float(row["volume"]),
-                )
-            )
-        except (KeyError, TypeError, ValueError, ValidationError) as exc:
-            raise ValueError(f"Row {row_number} contains invalid OHLCV data.") from exc
-
-    return candles
-
-
-def parse_ohlcv_dataframe(dataframe: pd.DataFrame) -> list[Candle]:
-    if dataframe.empty:
-        raise ValueError("Uploaded file must include at least one candle row.")
-
-    columns = {normalize_column(column): str(column) for column in dataframe.columns}
-    time_source = find_source_column(columns, TIME_ALIASES)
-    source_columns = {
-        canonical: find_source_column(columns, aliases)
-        for canonical, aliases in COLUMN_ALIASES.items()
-    }
-    missing = sorted([column for column, source in source_columns.items() if source is None])
-    if time_source is None:
-        missing.insert(0, "timestamp/date/datetime/time")
-    if missing:
-        raise ValueError(f"Missing required columns: {', '.join(missing)}.")
-
-    candles: list[Candle] = []
-    for row_index, row in dataframe.iterrows():
-        row_number = row_index + 2
-        try:
-            if row_is_empty(row, [time_source, *source_columns.values()]):
-                continue
-            candles.append(
-                Candle(
-                    timestamp=format_timestamp(row[time_source]),
-                    open=parse_number(row[source_columns["open"]], row_number, "open"),
-                    high=parse_number(row[source_columns["high"]], row_number, "high"),
-                    low=parse_number(row[source_columns["low"]], row_number, "low"),
-                    close=parse_number(row[source_columns["close"]], row_number, "close"),
-                    volume=parse_number(row[source_columns["volume"]], row_number, "volume"),
-                )
-            )
-        except (KeyError, TypeError, ValueError, ValidationError) as exc:
-            raise ValueError(f"Row {row_number} contains invalid OHLCV data.") from exc
-
-    if not candles:
-        raise ValueError("Uploaded file must include at least one valid candle row.")
-
-    return candles
-
-
 def normalize_column(column: object) -> str:
     normalized = re.sub(r"[^a-z0-9]+", "_", str(column).strip().lower())
     return normalized.strip("_")
+
 
 
 def find_source_column(columns: dict[str, str], aliases: set[str]) -> str | None:
@@ -144,32 +23,121 @@ def find_source_column(columns: dict[str, str], aliases: set[str]) -> str | None
     return None
 
 
+
 def parse_number(value: object, row_number: int, column: str) -> float:
     if pd.isna(value):
-        raise ValueError(f"Row {row_number} has an empty {column} value.")
-    if isinstance(value, int | float):
-        return float(value)
+        raise ValueError(f"Row {row_number} has empty {column} value.")
 
     cleaned = str(value).strip()
+
     if not cleaned:
-        raise ValueError(f"Row {row_number} has an empty {column} value.")
-    if cleaned.startswith("(") and cleaned.endswith(")"):
-        cleaned = f"-{cleaned[1:-1]}"
+        raise ValueError(f"Row {row_number} has empty {column} value.")
+
     cleaned = re.sub(r"[$€£¥,%_\s]", "", cleaned)
-    cleaned = cleaned.replace(",", "")
+
     return float(cleaned)
 
 
-def format_timestamp(value: object) -> str:
+
+def parse_timestamp(value: object, row_number: int) -> str:
     if pd.isna(value):
-        raise ValueError("Timestamp value is empty.")
-    if isinstance(value, pd.Timestamp):
-        if value.time() == pd.Timestamp(value.date()).time():
-            return value.date().isoformat()
-        return value.isoformat()
-    return str(value).strip()
+        raise ValueError(f"Row {row_number} timestamp is empty.")
+
+    try:
+        timestamp = pd.to_datetime(value)
+        return timestamp.isoformat()
+
+    except Exception as exc:
+        raise ValueError(
+            f"Invalid timestamp format at row {row_number}."
+        ) from exc
 
 
-def row_is_empty(row: pd.Series, columns: list[str | None]) -> bool:
-    present_columns = [column for column in columns if column is not None]
-    return all(pd.isna(row[column]) or str(row[column]).strip() == "" for column in present_columns)
+
+def validate_chronological_order(timestamps: list[datetime]) -> None:
+    for i in range(1, len(timestamps)):
+        if timestamps[i] <= timestamps[i - 1]:
+            raise ValueError(
+                "Timestamps must be in strictly chronological order."
+            )
+
+
+
+def validate_duplicate_timestamps(timestamps: list[datetime]) -> None:
+    if len(timestamps) != len(set(timestamps)):
+        raise ValueError("Duplicate timestamps detected in uploaded file.")
+
+
+def load_sample_candles() -> list[Candle]:
+    """Loads a sample set of candles for default data testing."""
+    base_dir = Path(__file__).resolve().parent.parent.parent
+    sample_path = base_dir / "data" / "sample_candles.json"
+    
+    if not sample_path.exists():
+        sample_path = base_dir / "app" / "data" / "sample_candles.json"
+
+    if not sample_path.exists():
+        return [
+            Candle(
+                timestamp=f"2024-01-{i + 1:02d}T00:00:00",
+                open=100.0 + i,
+                high=105.0 + i,
+                low=95.0 + i,
+                close=102.0 + i,
+                volume=1000.0 + i,
+            )
+            for i in range(25)
+        ]
+        
+    with open(sample_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        
+    return [Candle(**item) for item in data]
+
+
+async def parse_upload_file(file: UploadFile) -> list[Candle]:
+    """Parses an uploaded CSV or JSON file into a list of Candle models."""
+    content = await file.read()
+    
+    if file.filename.endswith('.csv'):
+        df = pd.read_csv(BytesIO(content), sep=None, engine='python')
+    elif file.filename.endswith('.xlsx'):
+        df = pd.read_excel(BytesIO(content))
+    else:
+        raise ValueError("Only .csv and .xlsx files are supported")
+
+    columns = {normalize_column(col): str(col) for col in df.columns}
+
+    time_col = find_source_column(columns, {"time", "timestamp", "date", "t", "open_time", "datetime", "date_time"})
+    open_col = find_source_column(columns, {"open", "o", "open_price"})
+    high_col = find_source_column(columns, {"high", "h", "high_price"})
+    low_col = find_source_column(columns, {"low", "l", "low_price"})
+    close_col = find_source_column(columns, {"close", "c", "last_price"})
+    volume_col = find_source_column(columns, {"volume", "vol", "v"})
+
+    if not all([time_col, open_col, high_col, low_col, close_col]):
+        raise ValueError("Missing required columns (time, open, high, low, close) in uploaded data.")
+
+    candles = []
+    timestamps = []
+
+    for index, row in df.iterrows():
+        row_number = index + 1
+        
+        ts_str = parse_timestamp(row[time_col], row_number)
+        ts_dt = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+        timestamps.append(ts_dt)
+
+        candles.append(Candle(
+            timestamp=ts_str,
+            open=parse_number(row[open_col], row_number, "open"),
+            high=parse_number(row[high_col], row_number, "high"),
+            low=parse_number(row[low_col], row_number, "low"),
+            close=parse_number(row[close_col], row_number, "close"),
+            volume=parse_number(row[volume_col], row_number, "volume") if volume_col else 0.0
+        ))
+
+    validate_chronological_order(timestamps)
+    validate_duplicate_timestamps(timestamps)
+
+    return candles
