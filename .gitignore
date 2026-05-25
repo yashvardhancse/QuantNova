@@ -23,3 +23,7 @@ __pycache__/
 *$py.class
 .DS_Store
 *.local
+*.pyc
+*.egg-info/venv/
+.venv/
+.vscode
