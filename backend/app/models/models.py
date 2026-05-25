@@ -1,6 +1,6 @@
+from pydantic import  ConfigDict,BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel
 from typing import Literal
-
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class Candle(BaseModel):
@@ -52,28 +52,6 @@ class IndicatorConfig(BaseModel):
             raise ValueError("Indicator periods must be positive integers.")
         return period
 
-
-class IndicatorRequest(BaseModel):
-    candles: list[Candle] = Field(min_length=1)
-    indicators: IndicatorConfig
-
-
-class BacktestRequest(BaseModel):
-    candles: list[Candle] = Field(min_length=2)
-    short_window: int = Field(gt=0)
-    long_window: int = Field(gt=0)
-    initial_cash: float = Field(gt=0)
-    fee_rate: float = Field(default=0.001, ge=0, lt=1)
-
-    @model_validator(mode="after")
-    def short_window_must_be_less_than_long_window(self) -> "BacktestRequest":
-        if self.short_window >= self.long_window:
-            raise ValueError("short_window must be less than long_window.")
-        if self.long_window > len(self.candles):
-            raise ValueError("long_window cannot be larger than the number of candles.")
-        return self
-
-
 class Signal(BaseModel):
     timestamp: str
     time: str
@@ -122,3 +100,23 @@ class BacktestResponse(BaseModel):
     trades: list[Trade]
     signals: list[Signal]
     equity_curve: list[EquityPoint]
+
+class IndicatorRequest(BaseModel):
+    candles: list[Candle] = Field(min_length=1)
+    indicators: IndicatorConfig
+
+
+class BacktestRequest(BaseModel):
+    candles: list[Candle] = Field(min_length=2)
+    short_window: int = Field(gt=0)
+    long_window: int = Field(gt=0)
+    initial_cash: float = Field(gt=0)
+    fee_rate: float = Field(default=0.001, ge=0, lt=1)
+
+    @model_validator(mode="after")
+    def short_window_must_be_less_than_long_window(self) -> "BacktestRequest":
+        if self.short_window >= self.long_window:
+            raise ValueError("short_window must be less than long_window.")
+        if self.long_window > len(self.candles):
+            raise ValueError("long_window cannot be larger than the number of candles.")
+        return self

@@ -35,6 +35,9 @@ interface CandleChartProps {
   showVolume: boolean;
   chartAction?: 'zoom-in' | 'zoom-out' | 'fit' | null;
   onChartActionHandled?: () => void;
+  selectedSymbol?: string;
+  selectedInterval?: string;
+  onIntervalChange?: (interval: string) => void;
 }
 
 interface HoverCandle {
@@ -57,6 +60,9 @@ export function CandleChart({
   showVolume,
   chartAction,
   onChartActionHandled,
+  selectedSymbol = 'BTCUSDT',
+  selectedInterval = '15m',
+  onIntervalChange,
 }: CandleChartProps) {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -262,13 +268,18 @@ export function CandleChart({
       <div className="chart-toolbar" aria-label="Chart controls">
         <div className="chart-symbol">
           <span className="search-dot" />
-          BTCUSDT
+          {selectedSymbol}
         </div>
         <div className="chart-timeframes" aria-label="Timeframes">
           {['1m', '5m', '15m', '30m', '1h', '2h', '4h', '12h', '1d', '1w'].map((item) => (
-            <span className={item === '15m' ? 'active' : undefined} key={item}>
+            <button
+              key={item}
+              className={item === selectedInterval ? 'active' : undefined}
+              onClick={() => onIntervalChange?.(item)}
+              type="button"
+            >
               {item}
-            </span>
+            </button>
           ))}
         </div>
         <div className="chart-tool-spacer" />

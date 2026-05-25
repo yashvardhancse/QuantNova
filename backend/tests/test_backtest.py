@@ -1,4 +1,4 @@
-from app.models import Candle
+from backend.app.models.models import Candle
 from app.services.backtester import run_ma_crossover_backtest
 
 

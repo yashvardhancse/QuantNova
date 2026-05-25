@@ -422,6 +422,16 @@ select:focus {
   box-shadow: 0 0 14px rgba(16, 185, 129, 0.86);
 }
 
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #16c784;
+  margin-left: 5px;
+  animation: pulse 1.5s infinite;
+}
+
 .indicator-strip {
   display: flex;
   gap: 8px;
@@ -532,7 +542,8 @@ select:focus {
   flex-wrap: wrap;
 }
 
-.chart-timeframes span {
+.chart-timeframes span,
+.chart-timeframes button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -541,11 +552,20 @@ select:focus {
   border-radius: 5px;
   color: #8b96a8;
   font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 6px;
 }
-
-.chart-timeframes span.active {
+.chart-timeframes span.active,
+.chart-timeframes button.active {
   background: rgba(148, 163, 184, 0.13);
   color: #f8fafc;
+}
+.chart-timeframes button:hover {
+  background: rgba(148, 163, 184, 0.08);
+  color: #cbd5e1;
 }
 
 .chart-tool-spacer {

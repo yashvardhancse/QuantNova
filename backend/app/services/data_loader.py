@@ -6,7 +6,9 @@ from pathlib import Path
 
 import pandas as pd
 from fastapi import UploadFile
-from app.models import Candle
+from pydantic import ValidationError
+
+from backend.app.models.models import Candle
 
 def normalize_column(column: object) -> str:
     normalized = re.sub(r"[^a-z0-9]+", "_", str(column).strip().lower())
