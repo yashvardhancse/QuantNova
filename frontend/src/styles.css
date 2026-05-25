@@ -17,8 +17,10 @@
   --red-soft: rgba(239, 68, 68, 0.14);
   --blue: #38bdf8;
   --shadow: 0 18px 55px rgba(0, 0, 0, 0.44);
+
   color: var(--text);
   background: var(--bg);
+
   font-family:
     Inter,
     ui-sans-serif,
@@ -27,10 +29,39 @@
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
 
+/* LIGHT MODE */
+[data-theme='light'] {
+  --bg: #f4f7fb;
+  --bg-elevated: #ffffff;
+  --panel: #ffffff;
+  --panel-2: #f8fafc;
+  --panel-3: #eef2ff;
+
+  --border: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(109, 93, 252, 0.28);
+
+  --text: #0f172a;
+  --muted: #475569;
+  --faint: #64748b;
+
+  --purple: #6d5dfc;
+  --purple-deep: #5b4df5;
+
+  --green: #059669;
+  --green-soft: rgba(5, 150, 105, 0.12);
+
+  --red: #dc2626;
+  --red-soft: rgba(220, 38, 38, 0.12);
+
+  --blue: #0284c7;
+
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
 * {
   box-sizing: border-box;
 }
@@ -50,6 +81,13 @@ body {
   background:
     radial-gradient(circle at 78% 0%, rgba(109, 93, 252, 0.13), transparent 28%),
     linear-gradient(180deg, #090e1c 0%, #070a12 45%, #04060c 100%);
+}
+
+/* LIGHT BODY */
+[data-theme='light'] body {
+  background:
+    radial-gradient(circle at top right, rgba(109, 93, 252, 0.08), transparent 25%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
 }
 
 button,
@@ -1094,4 +1132,30 @@ td {
   .status-panel {
     grid-template-columns: 1fr;
   }
+}
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: var(--panel);
+  color: var(--text);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  border-color: var(--purple);
 }
