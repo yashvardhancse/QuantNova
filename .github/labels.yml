@@ -13,3 +13,6 @@
 - name: documentation
   color: '0075ca'
   description: Documentation updates or improvements
+- name: gssoc26
+  description: "Issue or PR related to GSSoC 2026 contributions"
+  color: "FF6B35"  # Orange color (you can customize this)

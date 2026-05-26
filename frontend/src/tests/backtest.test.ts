@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { runMovingAverageCrossoverBacktest } from '../backtest/movingAverageCrossover';
+import {
+  calculateSharpeRatio,
+  runMovingAverageCrossoverBacktest,
+} from '../backtest/movingAverageCrossover';
 import { Candle } from '../utils/types';
 
 const closes = [10, 9, 8, 9, 10, 11, 12, 11, 10, 9, 8, 7];
@@ -39,5 +42,50 @@ describe('moving average crossover backtest', () => {
         initialCash: 1000,
       }),
     ).toThrow('Short period must be less than long period.');
+  });
+
+  it('includes a sharpe ratio in the result', () => {
+    const result = runMovingAverageCrossoverBacktest(candles, {
+      shortPeriod: 2,
+      longPeriod: 4,
+      initialCash: 1000,
+    });
+
+    expect(typeof result.sharpeRatio).toBe('number');
+    expect(Number.isFinite(result.sharpeRatio)).toBe(true);
+  });
+});
+
+describe('calculateSharpeRatio', () => {
+  it('returns 0 for fewer than 3 equity values', () => {
+    expect(calculateSharpeRatio([])).toBe(0);
+    expect(calculateSharpeRatio([100])).toBe(0);
+    expect(calculateSharpeRatio([100, 110])).toBe(0);
+  });
+
+  it('returns 0 when all equity values are the same', () => {
+    expect(calculateSharpeRatio([100, 100, 100, 100])).toBe(0);
+  });
+
+  it('returns a positive ratio for consistently rising equity', () => {
+    const rising = [100, 105, 110, 115, 120, 125];
+    const ratio = calculateSharpeRatio(rising);
+    expect(ratio).toBeGreaterThan(0);
+  });
+
+  it('returns a negative ratio for consistently falling equity', () => {
+    const falling = [100, 95, 90, 85, 80, 75];
+    const ratio = calculateSharpeRatio(falling);
+    expect(ratio).toBeLessThan(0);
+  });
+
+  it('skips zero-valued previous entries to avoid division by zero', () => {
+    expect(calculateSharpeRatio([0, 0, 100, 110, 120])).toBeGreaterThan(0);
+  });
+
+  it('returns a finite number for volatile equity curves', () => {
+    const volatile = [100, 120, 90, 130, 80, 140];
+    const ratio = calculateSharpeRatio(volatile);
+    expect(Number.isFinite(ratio)).toBe(true);
   });
 });

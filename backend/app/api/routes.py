@@ -3,7 +3,7 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
-from app.models import BacktestRequest, BacktestResponse, Candle, IndicatorRequest
+from backend.app.models.models import BacktestRequest, BacktestResponse, Candle, IndicatorRequest
 from app.services.backtester import run_ma_crossover_backtest
 from app.services.binance import fetch_klines
 from app.services.data_loader import load_sample_candles, parse_upload_file

@@ -6,7 +6,7 @@ import pandas as pd
 from fastapi import UploadFile
 from pydantic import ValidationError
 
-from app.models import Candle
+from backend.app.models.models import Candle
 
 REQUIRED_COLUMNS = ("open", "high", "low", "close", "volume")
 TIME_ALIASES = {

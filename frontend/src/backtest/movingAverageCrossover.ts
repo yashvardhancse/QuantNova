@@ -73,16 +73,39 @@ export function runMovingAverageCrossoverBacktest(
 
   const netProfit = cash - options.initialCash;
   const winningTrades = trades.filter((trade) => trade.profit > 0).length;
+  const sharpeRatio = calculateSharpeRatio(equityCurve.map((point) => point.value));
 
   return {
     totalTrades: trades.length,
     netProfit: round(netProfit, 2),
     winRate: trades.length === 0 ? 0 : round((winningTrades / trades.length) * 100, 2),
     maxDrawdown: round(maxDrawdown * 100, 2),
+    sharpeRatio,
     finalEquity: round(cash, 2),
     trades,
     equityCurve,
   };
+}
+
+export function calculateSharpeRatio(equityValues: number[]): number {
+  if (equityValues.length < 3) return 0;
+
+  const returns: number[] = [];
+  for (let index = 1; index < equityValues.length; index += 1) {
+    if (equityValues[index - 1] !== 0) {
+      returns.push((equityValues[index] - equityValues[index - 1]) / equityValues[index - 1]);
+    }
+  }
+
+  if (returns.length < 2) return 0;
+
+  const mean = returns.reduce((sum, value) => sum + value, 0) / returns.length;
+  const variance = returns.reduce((sum, value) => sum + (value - mean) ** 2, 0) / returns.length;
+  const volatility = Math.sqrt(variance);
+
+  if (volatility === 0) return 0;
+
+  return round((mean / volatility) * Math.sqrt(returns.length), 2);
 }
 
 function createTrade(

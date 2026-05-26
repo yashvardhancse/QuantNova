@@ -1,6 +1,6 @@
 from statistics import mean, pstdev
 
-from app.models import (
+from backend.app.models.models import (
     BacktestResponse,
     BacktestStats,
     BacktestSummary,
