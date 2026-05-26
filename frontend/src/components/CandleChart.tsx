@@ -273,17 +273,17 @@ export function CandleChart({
         <div className="chart-timeframes" aria-label="Timeframes">
           {['1m', '5m', '15m', '30m', '1h', '2h', '4h', '12h', '1d', '1w'].map((item) => (
             <button
-              key={item}
-              className={item === selectedInterval ? 'active' : undefined}
-              onClick={() => onIntervalChange?.(item)}
               type="button"
+              className={`btn-base btn-outline ${item === selectedInterval ? 'active' : ''}`}
+              key={item}
+              onClick={() => onIntervalChange?.(item)}
             >
               {item}
             </button>
           ))}
         </div>
         <div className="chart-tool-spacer" />
-        <span className="chart-toolbar-button">Indicators</span>
+        <button type="button" className="btn-base btn-outline">Indicators</button>
       </div>
       <div className="chart-stage">
         <div className="lw-chart" ref={chartContainerRef} />

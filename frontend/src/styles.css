@@ -1095,3 +1095,43 @@ td {
     grid-template-columns: 1fr;
   }
 }
+/* --- QuantNova Reusable Button Classes --- */
+
+/* Base style for all buttons */
+.btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+
+/* Primary Button Style */
+.btn-primary {
+  background-color: #0070f3;
+  color: white;
+}
+
+/* Hover state for Primary */
+.btn-primary:hover {
+  background-color: #0051cc;
+  transform: translateY(-1px);
+}
+
+/* Outline/Secondary Button Style */
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #333;
+  color: #eaeaea;
+}
+
+/* Hover state for Outline */
+.btn-outline:hover {
+  border-color: #eaeaea;
+  background-color: rgba(255, 255, 255, 0.05);
+}
