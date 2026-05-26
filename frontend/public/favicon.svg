@@ -1,24 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="QuantNova favicon">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="QuantNova favicon">
   <defs>
-    <linearGradient id="bg" x1="72" y1="52" x2="438" y2="462" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#10233d" />
-      <stop offset="0.52" stop-color="#07111f" />
-      <stop offset="1" stop-color="#020617" />
+    <linearGradient id="qn-bg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f172a" />
+      <stop offset="1" stop-color="#1d4ed8" />
     </linearGradient>
-    <linearGradient id="ring" x1="122" y1="98" x2="390" y2="414" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#67e8f9" />
-      <stop offset="0.56" stop-color="#38bdf8" />
-      <stop offset="1" stop-color="#14b8a6" />
-    </linearGradient>
-    <linearGradient id="signal" x1="150" y1="302" x2="366" y2="177" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#e0f2fe" />
-      <stop offset="0.5" stop-color="#7dd3fc" />
-      <stop offset="1" stop-color="#34d399" />
+    <linearGradient id="qn-accent" x1="18" y1="16" x2="46" y2="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#38bdf8" />
+      <stop offset="1" stop-color="#22c55e" />
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="104" fill="url(#bg)" />
-  <path d="M256 103c-84.5 0-153 68.5-153 153s68.5 153 153 153c31.2 0 60.3-9.4 84.5-25.4" fill="none" stroke="url(#ring)" stroke-width="44" stroke-linecap="round" />
-  <path d="M332 332l76 76" fill="none" stroke="#2dd4bf" stroke-width="52" stroke-linecap="round" />
-  <path d="M146 292l55-58 45 46 86-113 40 42" fill="none" stroke="url(#signal)" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" />
-  <circle cx="372" cy="209" r="20" fill="#ecfeff" />
+  <rect width="64" height="64" rx="18" fill="url(#qn-bg)" />
+  <path
+    d="M31.8 14c-10.1 0-18.3 8.2-18.3 18.3 0 10.1 8.2 18.3 18.3 18.3 3.2 0 6.3-.8 9-2.4l7.2 7.2a2.8 2.8 0 0 0 4-4l-7-7a18.1 18.1 0 0 0 5-12.2C50 22.2 41.8 14 31.8 14Zm0 6.2c6.6 0 12 5.4 12 12s-5.4 12-12 12-12-5.4-12-12 5.4-12 12-12Z"
+    fill="url(#qn-accent)"
+  />
+  <path
+    d="M24 37.5 29 32l5 4.2L41 26l3 2.6-9.4 11.5-5.3-4.4-3.7 4.1Z"
+    fill="#f8fafc"
+  />
 </svg>
