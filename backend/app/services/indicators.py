@@ -1,4 +1,6 @@
 import math
+import pandas as pd
+from typing import List, Dict, Any
 
 NullableFloat = float | None
 
@@ -106,3 +108,25 @@ def _rsi_from_averages(average_gain: float, average_loss: float) -> float:
 
 def round_number(value: float, decimals: int = 4) -> float:
     return round(float(value), decimals)
+
+def calculate_atr(data: List[Dict[str, Any]], period: int = 14) -> List[float]:
+
+    if len(data) < period:
+        raise ValueError(f"Insufficient data: need at least {period} candles, got {len(data)}")
+    
+    required_keys = {'high', 'low', 'close'}
+    if not all(required_keys.issubset(candle.keys()) for candle in data):
+        raise ValueError(f"Each candle must contain: {required_keys}")
+    
+    df = pd.DataFrame(data)
+
+    df['prev_close'] = df['close'].shift(1)
+    df['tr1'] = df['high'] - df['low']  # High - Low
+    df['tr2'] = abs(df['high'] - df['prev_close'])  
+    df['tr3'] = abs(df['low'] - df['prev_close'])   
+    
+    df['tr'] = df[['tr1', 'tr2', 'tr3']].max(axis=1)
+    df['atr'] = df['tr'].ewm(span=period, adjust=False).mean()
+    df.loc[0, 'atr'] = df.loc[0, 'tr1']
+    
+    return df['atr'].tolist()

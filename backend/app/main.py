@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .indicators import router as indicators_router
 
 from app.api.routes import router
 
@@ -24,3 +25,4 @@ def health() -> dict[str, str]:
 
 
 app.include_router(router)
+app.include_router(indicators_router)

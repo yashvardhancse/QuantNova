@@ -1,0 +1,162 @@
+.atr-indicator {
+  background: var(--card-background, #1a1a1a);
+  border: 1px solid var(--border-color, #333);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.indicator-header {
+  margin-bottom: 1.5rem;
+}
+
+.indicator-header h3 {
+  color: var(--text-primary, #ffffff);
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.indicator-description {
+  color: var(--text-secondary, #888);
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.indicator-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.indicator-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary, #ffffff);
+  font-size: 0.875rem;
+}
+
+.indicator-controls input[type="number"] {
+  width: 80px;
+  padding: 0.5rem;
+  background: var(--input-background, #2a2a2a);
+  border: 1px solid var(--border-color, #444);
+  border-radius: 4px;
+  color: var(--text-primary, #ffffff);
+  font-size: 0.875rem;
+}
+
+.indicator-controls input[type="number"]:focus {
+  outline: none;
+  border-color: var(--accent-color, #4a9eff);
+}
+
+.indicator-controls input[type="number"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.indicator-controls button {
+  padding: 0.5rem 1.25rem;
+  background: var(--accent-color, #4a9eff);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.indicator-controls button:hover:not(:disabled) {
+  background: var(--accent-color-hover, #3a8eef);
+  transform: translateY(-1px);
+}
+
+.indicator-controls button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.indicator-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  color: #ff3b30;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.indicator-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color, #333);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  color: var(--text-secondary, #888);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.stat-value {
+  color: var(--text-primary, #ffffff);
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 768px) {
+  .atr-indicator {
+    padding: 1rem;
+  }
+
+  .indicator-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .indicator-controls label {
+    justify-content: space-between;
+  }
+
+  .indicator-controls button {
+    width: 100%;
+  }
+
+  .indicator-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .atr-indicator {
+    background: #0d0d0d;
+    border-color: #1a1a1a;
+  }
+
+  .indicator-controls input[type="number"] {
+    background: #1a1a1a;
+    border-color: #333;
+  }
+}

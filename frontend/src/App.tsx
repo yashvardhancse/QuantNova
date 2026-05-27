@@ -21,6 +21,7 @@ import {
   calculateSma,
 } from './indicators';
 import { ApiBacktestResponse, BacktestResult, Candle, NullableNumber, Trade } from './utils/types';
+import ATRIndicator from './components/ATRIndicator';
 import { createBinanceWebSocket } from './api/binanceWebSocket';
 type Section = 'Terminal' | 'Strategies' | 'Portfolio' | 'Backtests' | 'History' | 'Monitor';
 type ApiStatus = 'checking' | 'connected' | 'fallback';
