@@ -49,6 +49,12 @@ interface HoverCandle {
   volume: number;
 }
 
+interface HoverTooltip {
+  candle: HoverCandle;
+  x: number;
+  y: number;
+}
+
 export function CandleChart({
   candles,
   shortSma,
@@ -74,7 +80,7 @@ export function CandleChart({
   const candleMarkersRef = useRef<ISeriesMarkersPluginApi<Time> | null>(null);
   const barMarkersRef = useRef<ISeriesMarkersPluginApi<Time> | null>(null);
   const candlesRef = useRef<Candle[]>(candles);
-  const [hoverCandle, setHoverCandle] = useState<HoverCandle | null>(null);
+  const [hoverTooltip, setHoverTooltip] = useState<HoverTooltip | null>(null);
 
   const ohlcData = useMemo(
     () =>
@@ -183,7 +189,7 @@ export function CandleChart({
     barMarkersRef.current = createSeriesMarkers(barSeries, []);
 
     chart.subscribeCrosshairMove((params) => {
-      setHoverCandle(readHoveredCandle(params, candlesRef.current));
+      setHoverTooltip(readHoveredCandle(params, candlesRef.current));
     });
 
     const resizeObserver = new ResizeObserver(() => {
@@ -287,11 +293,16 @@ export function CandleChart({
       </div>
       <div className="chart-stage">
         <div className="lw-chart" ref={chartContainerRef} />
-        <div className="chart-hover-card">
-          {(hoverCandle ?? candles[candles.length - 1]) ? (
-            <OhlcvReadout candle={(hoverCandle ?? toHoverCandle(candles[candles.length - 1]))!} />
-          ) : null}
-        </div>
+        {hoverTooltip ? (
+          <div
+            className="chart-hover-card"
+            style={{ left: hoverTooltip.x, top: hoverTooltip.y }}
+            role="status"
+            aria-live="polite"
+          >
+            <OhlcvReadout candle={hoverTooltip.candle} />
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -340,13 +351,14 @@ function buildSignalMarkers(signals: BacktestSignal[]): SeriesMarker<Time>[] {
   });
 }
 
-function readHoveredCandle(params: MouseEventParams<Time>, candles: Candle[]): HoverCandle | null {
-  if (params.time === undefined) return null;
+function readHoveredCandle(params: MouseEventParams<Time>, candles: Candle[]): HoverTooltip | null {
+  if (params.time === undefined || !params.point) return null;
   const hoverTime = String(params.time);
   const candle = candles.find(
     (item) => String(toChartTime(item.timestamp ?? item.date)) === hoverTime,
   );
-  return candle ? toHoverCandle(candle) : null;
+  const hoverCandle = toHoverCandle(candle);
+  return hoverCandle ? { candle: hoverCandle, x: params.point.x, y: params.point.y } : null;
 }
 
 function toHoverCandle(candle?: Candle): HoverCandle | null {

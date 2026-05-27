@@ -592,8 +592,6 @@ select:focus {
 
 .chart-hover-card {
   position: absolute;
-  top: 10px;
-  left: 12px;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -606,7 +604,9 @@ select:focus {
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
   font-size: 0.72rem;
   pointer-events: none;
+  transform: translate(12px, 12px);
   backdrop-filter: blur(8px);
+  z-index: 3;
 }
 
 .chart-hover-card strong {
