@@ -110,7 +110,7 @@ describe('CandleChart Tooltip', () => {
         mockSubscribeCrosshairMove({
           point: { x: 100, y: 100 },
           time: timeValue,
-        });
+        } as unknown as MouseEventParams<Time>);
       }
     });
 
@@ -156,7 +156,7 @@ describe('CandleChart Tooltip', () => {
         mockSubscribeCrosshairMove({
           point: { x: 100, y: 100 },
           time: timeValue,
-        });
+        } as unknown as MouseEventParams<Time>);
       }
     });
     expect(screen.getByTestId('chart-tooltip')).toBeInTheDocument();
@@ -167,7 +167,7 @@ describe('CandleChart Tooltip', () => {
         mockSubscribeCrosshairMove({
           point: undefined,
           time: undefined,
-        });
+        } as unknown as MouseEventParams<Time>);
       }
     });
     expect(screen.queryByTestId('chart-tooltip')).not.toBeInTheDocument();
