@@ -590,28 +590,63 @@ select:focus {
   background: #080b12;
 }
 
-.chart-hover-card {
+.chart-floating-tooltip {
   position: absolute;
-  top: 10px;
-  left: 12px;
+  z-index: 10;
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  max-width: calc(100% - 24px);
-  border: 1px solid rgba(148, 163, 184, 0.14);
+  flex-direction: column;
+  gap: 12px;
+  width: max-content;
+  min-width: 140px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 6px;
-  background: rgba(8, 11, 18, 0.76);
-  color: #94a3b8;
-  padding: 6px 8px;
+  background: rgba(8, 11, 18, 0.92);
+  color: #cbd5e1;
+  padding: 10px 12px;
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(8px);
 }
 
-.chart-hover-card strong {
-  color: #e2e8f0;
+.tooltip-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  padding-bottom: 8px;
+}
+
+.tooltip-symbol {
+  color: #f8fafc;
   font-weight: 800;
+}
+
+.tooltip-date {
+  color: #94a3b8;
+  font-size: 0.7rem;
+}
+
+.tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tooltip-row span:first-child {
+  color: #94a3b8;
+}
+
+.tooltip-row span:last-child {
+  color: #f8fafc;
+  font-weight: 700;
 }
 
 svg {

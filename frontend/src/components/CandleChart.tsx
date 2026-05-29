@@ -75,6 +75,7 @@ export function CandleChart({
   const barMarkersRef = useRef<ISeriesMarkersPluginApi<Time> | null>(null);
   const candlesRef = useRef<Candle[]>(candles);
   const [hoverCandle, setHoverCandle] = useState<HoverCandle | null>(null);
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0, visible: false });
 
   const ohlcData = useMemo(
     () =>
@@ -183,7 +184,41 @@ export function CandleChart({
     barMarkersRef.current = createSeriesMarkers(barSeries, []);
 
     chart.subscribeCrosshairMove((params) => {
-      setHoverCandle(readHoveredCandle(params, candlesRef.current));
+      const chartEl = chartContainerRef.current;
+      if (!chartEl || params.point === undefined || !params.time) {
+        setTooltipPos((prev) => ({ ...prev, visible: false }));
+        setHoverCandle(null);
+        return;
+      }
+      const x = params.point.x;
+      const y = params.point.y;
+      if (x < 0 || x > chartEl.clientWidth || y < 0 || y > chartEl.clientHeight) {
+        setTooltipPos((prev) => ({ ...prev, visible: false }));
+        setHoverCandle(null);
+        return;
+      }
+
+      const hovered = readHoveredCandle(params, candlesRef.current);
+      setHoverCandle(hovered);
+      if (hovered) {
+        const tooltipWidth = 140;
+        const tooltipHeight = 160;
+        const margin = 15;
+
+        let left = x + margin;
+        let top = y + margin;
+
+        if (left + tooltipWidth > chartEl.clientWidth) {
+          left = x - tooltipWidth - margin;
+        }
+        if (top + tooltipHeight > chartEl.clientHeight) {
+          top = y - tooltipHeight - margin;
+        }
+
+        setTooltipPos({ x: left, y: top, visible: true });
+      } else {
+        setTooltipPos((prev) => ({ ...prev, visible: false }));
+      }
     });
 
     const resizeObserver = new ResizeObserver(() => {
@@ -287,27 +322,42 @@ export function CandleChart({
       </div>
       <div className="chart-stage">
         <div className="lw-chart" ref={chartContainerRef} />
-        <div className="chart-hover-card">
-          {(hoverCandle ?? candles[candles.length - 1]) ? (
-            <OhlcvReadout candle={(hoverCandle ?? toHoverCandle(candles[candles.length - 1]))!} />
-          ) : null}
-        </div>
+        {tooltipPos.visible && hoverCandle && (
+          <div
+            className="chart-floating-tooltip"
+            style={{ left: tooltipPos.x, top: tooltipPos.y }}
+            data-testid="chart-tooltip"
+          >
+            <div className="tooltip-header">
+              <div className="tooltip-symbol">{selectedSymbol}</div>
+              <div className="tooltip-date">{formatTooltipDate(hoverCandle.time)}</div>
+            </div>
+            <div className="tooltip-body">
+              <div className="tooltip-row"><span>O:</span> <span>{formatCompact(hoverCandle.open)}</span></div>
+              <div className="tooltip-row"><span>H:</span> <span>{formatCompact(hoverCandle.high)}</span></div>
+              <div className="tooltip-row"><span>L:</span> <span>{formatCompact(hoverCandle.low)}</span></div>
+              <div className="tooltip-row"><span>C:</span> <span>{formatCompact(hoverCandle.close)}</span></div>
+              <div className="tooltip-row"><span>V:</span> <span>{formatCompact(hoverCandle.volume)}</span></div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function OhlcvReadout({ candle }: { candle: HoverCandle }) {
-  return (
-    <>
-      <span>{candle.time}</span>
-      <strong>O {formatCompact(candle.open)}</strong>
-      <strong>H {formatCompact(candle.high)}</strong>
-      <strong>L {formatCompact(candle.low)}</strong>
-      <strong>C {formatCompact(candle.close)}</strong>
-      <strong>V {formatCompact(candle.volume)}</strong>
-    </>
-  );
+function formatTooltipDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const yyyy = d.getUTCFullYear();
+  const mm = pad(d.getUTCMonth() + 1);
+  const dd = pad(d.getUTCDate());
+  const hh = pad(d.getUTCHours());
+  const mins = pad(d.getUTCMinutes());
+  
+  return `${yyyy}-${mm}-${dd} ${hh}:${mins} UTC`;
 }
 
 function toChartTime(value: string): Time {
@@ -362,5 +412,5 @@ function toHoverCandle(candle?: Candle): HoverCandle | null {
 }
 
 function formatCompact(value: number): string {
-  return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
