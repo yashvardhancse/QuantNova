@@ -5,8 +5,8 @@ export function useReplayEngine(totalLength: number) {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(totalLength > 0 ? totalLength - 1 : 0);
 
-  const requestRef = useRef<number>();
-  const lastTimeRef = useRef<number>();
+  const requestRef = useRef<number | undefined>(undefined);
+  const lastTimeRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     setCurrentIndex(totalLength > 0 ? totalLength - 1 : 0);

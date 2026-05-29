@@ -20,7 +20,7 @@ import {
   calculateRsi,
   calculateSma,
 } from './indicators';
-import { ApiBacktestResponse, BacktestResult, Candle, NullableNumber, Trade } from './utils/types';
+import { ApiBacktestResponse, BacktestResult, BacktestSignal, Candle, NullableNumber, Trade } from './utils/types';
 import { createBinanceWebSocket } from './api/binanceWebSocket';
 type Section = 'Terminal' | 'Strategies' | 'Portfolio' | 'Backtests' | 'History' | 'Monitor';
 type ApiStatus = 'checking' | 'connected' | 'fallback';
@@ -153,7 +153,7 @@ function App() {
     const allSignals = apiBacktest?.signals ?? backtest.signals ?? [];
     if (!latestCandle) return [];
     const cutoffTime = new Date(latestCandle.timestamp ?? latestCandle.date).getTime();
-    return allSignals.filter((s) => new Date(s.time || s.timestamp || '').getTime() <= cutoffTime);
+    return allSignals.filter((s: BacktestSignal) => new Date(s.time || s.timestamp || '').getTime() <= cutoffTime);
   }, [apiBacktest, backtest, latestCandle]);
 
   const visibleTrades = useMemo(() => {

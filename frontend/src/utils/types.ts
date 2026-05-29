@@ -28,6 +28,7 @@ export interface BacktestResult {
   finalEquity: number;
   trades: Trade[];
   equityCurve: EquityPoint[];
+  signals?: BacktestSignal[];
 }
 
 export interface BacktestSignal {
