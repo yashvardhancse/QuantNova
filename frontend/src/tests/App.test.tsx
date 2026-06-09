@@ -132,7 +132,7 @@ describe('App', () => {
     render(<App />);
 
     await user.click(await screen.findByRole('button', { name: 'Run Backtest' }));
-    await user.click(screen.getByRole('button', { name: 'History' }));
+    await user.click(screen.getAllByRole('button', { name: 'History' })[0]);
     vi.spyOn(document, 'createElement').mockReturnValue({
       click,
       set href(_value: string) {},

@@ -51,7 +51,117 @@ body {
     radial-gradient(circle at 78% 0%, rgba(109, 93, 252, 0.13), transparent 28%),
     linear-gradient(180deg, #090e1c 0%, #070a12 45%, #04060c 100%);
 }
+/* =========================================
+    Header
+   ========================================= */
+.glass-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: rgba(11, 16, 32, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
 
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-text {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+.header-nav-desktop {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.header-nav-item {
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.header-nav-item:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.header-nav-item.active {
+  color: var(--text);
+  background: rgba(165, 162, 255, 0.15);
+  border: 1px solid rgba(165, 162, 255, 0.3);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  color: var(--text);
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.mobile-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.header-nav-mobile {
+  display: none;
+  flex-direction: column;
+  padding: 12px 20px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-nav-item.mobile {
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  margin-bottom: 4px;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 820px) {
+  .header-nav-desktop {
+    display: none; /* Hide desktop nav on mobile */
+  }
+
+  .mobile-menu-btn {
+    display: flex; /* Show hamburger */
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header-nav-mobile {
+    display: flex; /* Allow mobile nav to be visible when toggled */
+  }
+
+  /* Since the header replaces the sidebar, hide the old sidebar entirely */
+  .terminal-sidebar {
+    display: none !important;
+  }
+}
 button,
 input,
 select {
