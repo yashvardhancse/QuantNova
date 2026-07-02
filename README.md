@@ -53,7 +53,7 @@ npm run dev
 - [How to Contribute](#how-to-contribute)
 - [Beginner Contribution Flow](#beginner-contribution-flow)
 - [Contribution Workflow](#contribution-workflow)
-- [Common Setup Issues](#Common Setup Issues)
+- [Common Setup Issues](#common-setup-issues)
 - [Repository Labels](#repository-labels)
 - [Known Limitations as of now](#known-limitations-as-of-now)
 - [Architecture Workflow](#architecture-workflow)
