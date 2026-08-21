@@ -48,6 +48,8 @@ def get_binance_klines(
     start_date: date,
     end_date: date,
 ) -> list[dict[str, Any]]:
+    if start_date > end_date:
+        raise HTTPException(status_code=400, detail="Start date must be before end date.")
     try:
         return fetch_klines(
             symbol=symbol,
