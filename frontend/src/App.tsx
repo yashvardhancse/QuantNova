@@ -15,6 +15,7 @@ import { ReplayControls } from './components/ReplayControls';
 import { runMovingAverageCrossoverBacktest } from './backtest/movingAverageCrossover';
 import {
   BollingerBandPoint,
+  calculateAtr,
   calculateBollingerBands,
   calculateEma,
   calculateRsi,
@@ -111,6 +112,16 @@ function App() {
   const fallbackEma = useMemo(() => calculateEma(closes, 10), [closes]);
   const fallbackRsi = useMemo(() => calculateRsi(closes, 14), [closes]);
   const fallbackBands = useMemo(() => calculateBollingerBands(closes, 20, 2), [closes]);
+  const fallbackAtr = useMemo(
+  () =>
+    calculateAtr(
+      filteredCandles.map((candle) => candle.high),
+      filteredCandles.map((candle) => candle.low),
+      closes,
+      14,
+    ),
+  [filteredCandles, closes],
+);
   const fallbackBacktest = useMemo(
     () =>
       strategyError
@@ -150,7 +161,7 @@ function App() {
   const latestSignal = getLatestSignal(apiBacktest, backtest);
 
   const visibleSignals = useMemo(() => {
-    const allSignals = apiBacktest?.signals ?? backtest.signals ?? [];
+    const allSignals = apiBacktest?.signals ?? [];
     if (!latestCandle) return [];
     const cutoffTime = new Date(latestCandle.timestamp ?? latestCandle.date).getTime();
     return allSignals.filter((s) => new Date(s.time || s.timestamp || '').getTime() <= cutoffTime);
@@ -940,6 +951,9 @@ function App() {
               {visibleIndicators.bollinger ? (
                 <IndicatorPill label="BB Lower" value={latestBand?.lower ?? null} tone="neutral" />
               ) : null}
+              {visibleIndicators.atr ? (
+  <IndicatorPill label="ATR 14" value={fallbackAtr[latestIndex]} tone="blue" />
+) : null}
             </div>
             <CandleChart
               candles={visibleCandles}

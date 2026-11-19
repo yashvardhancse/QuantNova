@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { calculateBollingerBands, calculateEma, calculateRsi, calculateSma } from '../indicators';
-
+import {
+  calculateAtr,
+  calculateBollingerBands,
+  calculateEma,
+  calculateRsi,
+  calculateSma,
+} from '../indicators';
 describe('indicator calculations', () => {
   it('calculates SMA with nulls until the period is available', () => {
     expect(calculateSma([10, 20, 30, 40], 3)).toEqual([null, null, 20, 30]);
@@ -31,4 +36,38 @@ describe('indicator calculations', () => {
   it('rejects invalid periods', () => {
     expect(() => calculateSma([1, 2, 3], 0)).toThrow('Period must be a positive integer.');
   });
+
+it('calculates ATR using Wilder smoothing', () => {
+  const atr = calculateAtr(
+    [10, 12, 13, 14],
+    [8, 9, 11, 12],
+    [9, 11, 12, 13],
+    3,
+  );
+
+  expect(atr).toEqual([null, null, 2.3333, 2.2222]);
+});
+
+it('accounts for price gaps when calculating true range', () => {
+  const atr = calculateAtr(
+    [10, 12],
+    [8, 10],
+    [9, 11],
+    2,
+  );
+
+  expect(atr).toEqual([null, 2.5]);
+});
+
+it('returns null until enough candles are available', () => {
+  expect(
+    calculateAtr([10, 12], [8, 9], [9, 11], 3),
+  ).toEqual([null, null]);
+});
+
+it('rejects mismatched OHLC array lengths', () => {
+  expect(() =>
+    calculateAtr([10, 12], [8], [9, 11], 2),
+  ).toThrow('High, low, and close arrays must have the same length.');
+});
 });
