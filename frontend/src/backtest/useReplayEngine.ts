@@ -5,8 +5,8 @@ export function useReplayEngine(totalLength: number) {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(totalLength > 0 ? totalLength - 1 : 0);
 
-  const requestRef = useRef<number>();
-  const lastTimeRef = useRef<number>();
+  const requestRef = useRef<number | undefined>(undefined);
+  const lastTimeRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     setCurrentIndex(totalLength > 0 ? totalLength - 1 : 0);
@@ -43,18 +43,25 @@ export function useReplayEngine(totalLength: number) {
   );
 
   useEffect(() => {
-    if (isPlaying) {
-      if (currentIndex >= totalLength - 1) {
-        setCurrentIndex(0);
+    if (!isPlaying) {
+      if (requestRef.current !== undefined) {
+        cancelAnimationFrame(requestRef.current);
+        requestRef.current = undefined;
       }
-      requestRef.current = requestAnimationFrame(animate);
-    } else {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      lastTimeRef.current = undefined;
+      return;
     }
 
+    if (currentIndex >= totalLength - 1) {
+      setCurrentIndex(0);
+    }
+
+    requestRef.current = requestAnimationFrame(animate);
+
     return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (requestRef.current !== undefined) {
+        cancelAnimationFrame(requestRef.current);
+        requestRef.current = undefined;
+      }
     };
   }, [isPlaying, animate, currentIndex, totalLength]);
 
